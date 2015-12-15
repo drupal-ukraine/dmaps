@@ -1,0 +1,12 @@
+[submodule "d7/location"]
+	path = d7/location
+	url = http://git.drupal.org/project/location.git
+	branch = 7.x-3.x
+[submodule "d7/gmap"]
+	path = d7/gmap
+	url = http://git.drupal.org/project/gmap.git
+	branch = 7.x-2.x
+[submodule "d7/staticmap"]
+	path = d7/staticmap
+	url = http://git.drupal.org/project/staticmap.git
+	branch = 7.x-1.x
