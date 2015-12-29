@@ -1,0 +1,56 @@
+<?php
+
+/**
+ * @file
+ * StaticMap module install routines.
+ */
+
+/**
+ * Implements hook_schema().
+ */
+function staticmap_schema() {
+  $schema = array();
+  // Maps table (ctools extras).
+  $schema['staticmap_presets'] = array(
+    'description' => 'Storage for User defined Static Map presets.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'staticmap_presets',
+      'default hook' => 'staticmap_presets',
+      'api' => array(
+        'owner' => 'staticmap',
+        'api' => 'staticmap_presets',
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+    ),
+    'fields' => array(
+      'name' => array(
+        'description' => 'The primary identifier for the preset.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'title' => array(
+        'description' => 'The title of the preset.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+      ),
+      'description' => array(
+        'description' => 'The description of the preset.',
+        'type' => 'text',
+        'not null' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'The serialized map data.',
+        'type' => 'text',
+        'not null' => TRUE,
+        'serialize' => TRUE,
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+  return $schema;
+}

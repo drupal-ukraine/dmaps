@@ -1,0 +1,591 @@
+<?php
+
+/**
+ * @file
+ * SiteMap module.
+ */
+
+/**
+ * Implements hook_init().
+ */
+function staticmap_init() {
+  // See http://drupal.org/node/1142812
+  if (strstr(request_uri(), 'system/ajax') && $_POST['form_id'] == 'ctools_export_ui_edit_item_form') {
+    ctools_include('export');
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function staticmap_theme() {
+  // @TODO: Implement theme hook.
+  return array(
+    'staticmap_map' => array(
+      'arguments' => array(
+        'path' => array(),
+        'geo_data' => array(),
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_menu().
+ */
+function staticmap_menu() {
+  return array(
+    'admin/config/content/staticmap/settings' => array(
+      'title' => 'Settings',
+      'page callback' => 'drupal_get_form',
+      'page arguments' => array('staticmap_settings_form'),
+      'access arguments' => array('administer site configuration'),
+      'type' => MENU_LOCAL_TASK,
+    ),
+  );
+}
+
+/**
+ * Settings form for StaticMap.
+ *
+ * @return mixed
+ *   Settings form.
+ */
+function staticmap_settings_form() {
+  $form = array();
+
+  $form['staticmap_google_premier'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Google Premier Client ID'),
+    '#default_value' => variable_get('staticmap_google_premier', ''),
+  );
+
+  $form['staticmap_google_api_key'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Google API Key'),
+    '#description' => t('All Static Maps API applications should use an API key. Note: Maps for Business users must include client and signature parameters with their requests instead of a key.'),
+    '#default_value' => variable_get('staticmap_google_api_key', ''),
+  );
+
+  return system_settings_form($form);
+}
+
+/**
+ * Theme for staticmap_map().
+ */
+function theme_staticmap_map($vars) {
+  return theme('image', $vars);
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function staticmap_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools' && $plugin == 'export_ui') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function staticmap_field_formatter_info() {
+  return array(
+    'staticmap' => array(
+      'label' => t('Static Map'),
+      'field types' => array_keys(staticmap_load_field_info()),
+      'settings' => array(
+        'preset' => '',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_staticmap_field_alter().
+ */
+function staticmap_staticmap_field_alter(&$fields) {
+  $newfields = array(
+    'geofield' => array(
+      'class' => 'MapFieldGeofield',
+      'path' => drupal_get_path('module', 'staticmap') . '/includes',
+      'filename' => 'MapFieldGeofield',
+      'extension' => 'php',
+    ),
+    'location' => array(
+      'class' => 'MapFieldLocation',
+      'path' => drupal_get_path('module', 'staticmap') . '/includes',
+      'filename' => 'MapFieldLocation',
+      'extension' => 'php',
+    ),
+    'getlocations_fields' => array(
+      'class' => 'mapFieldGetlocations',
+      'path' => drupal_get_path('module', 'staticmap') . '/includes',
+      'filename' => 'mapFieldGetlocations',
+      'extension' => 'php',
+    ),
+  );
+  $fields = array_merge($fields, $newfields);
+}
+
+/**
+ * Implements hook_staticmap_provider_alter().
+ */
+function staticmap_staticmap_provider_alter(&$providers) {
+  $newproviders = array(
+    'openstreetmap' => array(
+      'name' => t('Open Street Map'),
+      'class' => 'MapProviderOpenStreetMap',
+      'path' => drupal_get_path('module', 'staticmap') . '/includes',
+      'filename' => 'MapProviderOpenStreetMap',
+      'extension' => 'php',
+    ),
+    'google' => array(
+      'name' => t('Google Maps'),
+      'class' => 'MapProviderGoogle',
+      'path' => drupal_get_path('module', 'staticmap') . '/includes',
+      'filename' => 'MapProviderGoogle',
+      'extension' => 'php',
+    ),
+  );
+
+  $providers = array_merge($providers, $newproviders);
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function staticmap_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  $element = array();
+  $settings = $display['settings'];
+
+  ctools_include('export');
+  $preset = ctools_export_crud_load('staticmap_presets', $settings['preset']);
+  $settings['preset'] = unserialize($preset->data);
+
+  $provider = staticmap_load_provider($settings['preset']['provider']);
+
+  $field_processor = staticmap_load_field($field['type']);
+
+  switch ($display['type']) {
+    case 'staticmap':
+      if ($provider) {
+        $geodata = $field_processor->provideGeodata($items, $settings);
+        $parameters = $provider->buildParams($geodata, $settings);
+
+        $url = $provider->apiUri . http_build_query($parameters);
+        if (!empty($settings['preset']['cache'])) {
+          $uri = static_map_cache_file_uri($entity_type, $entity, $instance, $url);
+          if (!file_exists($uri)) {
+            static_map_cache_file_delete($entity_type, $entity, $instance);
+            static_map_cache_file_save($provider->apiUri . http_build_query($parameters), $uri);
+          }
+          $url = file_create_url($uri);
+        }
+
+        $size = explode('x', $parameters['size']);
+        $element[0] = array(
+          '#markup' => theme('staticmap_map', array(
+            'path' => $url,
+            'width' => $size[0],
+            'height' => $size[1]
+          )),
+        );
+      }
+      else {
+        $element[0] = array(
+          '#markup' => "ERROR: MISSING PROCESS FUNCTION",
+        );
+      }
+      break;
+  }
+  return $element;
+}
+
+/**
+ * Generates a cache prefix for the map.
+ *
+ * @param string $entity_type
+ *   Type of entity.
+ *
+ * @param string $entity
+ *   Entity name.
+ *
+ * @param object $instance
+ *   Entity instance.
+ *
+ * @return string
+ *   Unique string for cache prefix.
+ */
+function static_map_cache_file_prefix($entity_type, $entity, $instance) {
+  $entity_ids = entity_extract_ids($entity_type, $entity);
+  return implode('-', array($entity_type, $entity_ids[0], $instance['id']));
+}
+
+/**
+ * Generates the full file URI.
+ *
+ * @param string $entity_type
+ *   Type of entity.
+ *
+ * @param string $entity
+ *   Entity name.
+ *
+ * @param object $instance
+ *   Entity instance.
+ *
+ * @param string $image_url
+ *   Relative url to image.
+ *
+ * @return string
+ *   Public URL to image.
+ */
+function static_map_cache_file_uri($entity_type, $entity, $instance, $image_url) {
+  return 'public://' . static_map_cache_file_prefix($entity_type, $entity, $instance) . md5($image_url) . '.png';
+}
+
+/**
+ * Delete a cached map when the rendered map changes.
+ *
+ * @param string $entity_type
+ *   Type of entity.
+ *
+ * @param string $entity
+ *   Entity name.
+ *
+ * @param object $instance
+ *   Entity instance.
+ */
+function static_map_cache_file_delete($entity_type, $entity, $instance) {
+  $query = db_select('file_managed', 'f')
+    ->condition('f.filename', static_map_cache_file_prefix($entity_type, $entity, $instance) . '%', 'LIKE')
+    ->fields('f', array('fid'));
+  $result = $query->execute()->fetchField();
+  if ($result) {
+    file_delete(file_load($result));
+  }
+}
+
+/**
+ * Generates a new cached map image.
+ *
+ * @param string $image_url
+ *   URL to image.
+ *
+ * @param string $uri
+ *   URI to image.
+ */
+function static_map_cache_file_save($image_url, $uri) {
+  $image = file_get_contents($image_url);
+  file_save_data($image, $uri, FILE_EXISTS_REPLACE);
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function staticmap_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  ctools_include('export');
+  $presets = ctools_export_crud_load_all('staticmap_presets');
+  $options = array();
+
+  foreach ($presets as $key => $preset) {
+    $options[$key] = $preset->title;
+  }
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $element = array();
+
+  $element['preset'] = array(
+    '#title' => t('Map Preset'),
+    '#type' => 'select',
+    '#options' => $options,
+    '#default_value' => $settings['preset'],
+  );
+  $element['preset_link'] = array(
+    '#type' => 'markup',
+    '#markup' => l(t('Preset Settings'), 'admin/config/content/staticmap'),
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function staticmap_field_formatter_settings_summary($field, $instance, $view_mode) {
+  // @TODO: Once we have ctools up and running,
+  // this should display the chosen preset.
+  $display = $instance['display'][$view_mode];
+
+  if (empty($display['settings']['preset'])) {
+    return t('No preset selected');
+  }
+
+  ctools_include('export');
+  $preset = ctools_export_crud_load('staticmap_presets', $display['settings']['preset']);
+  $preset_data = unserialize($preset->data);
+  $preset_summary = '';
+
+  if (!empty($preset_data['provider'])) {
+    $provider = staticmap_load_provider($preset_data['provider']);
+    $provider_summary = $provider->fieldFormatterSettingsSummary($field, $instance, $view_mode, $preset_data);
+  }
+
+  return t(
+    'Map preset: @preset<br />Map Size: @map_size<br />@provider_summary',
+    array(
+      '@preset' => $preset->title,
+      '@map_size' => $preset_data['mapsize'],
+      '@provider_summary' => $provider_summary
+    )
+  );
+}
+
+/**
+ * Loads aggregated provider data. Modules can hook into this with hook_staticmap_provider_alter.
+ */
+function staticmap_load_provider_info($provider_id = '') {
+  static $staticmap_providers = '';
+
+  if (empty($staticmap_providers)) {
+    $staticmap_providers = array();
+    drupal_alter('staticmap_provider', $staticmap_providers);
+  }
+
+  if (empty($provider_id)) {
+    return $staticmap_providers;
+  }
+  elseif (!empty($staticmap_providers[$provider_id])) {
+    return $staticmap_providers[$provider_id];
+  }
+
+  return FALSE;
+}
+
+/**
+ * Load provider.
+ *
+ * @param int $provider_id
+ *   ID for provider.
+ *
+ * @return bool
+ *   Returns provider or FALSE if not found.
+ */
+function staticmap_load_provider($provider_id) {
+  $provider_info = staticmap_load_provider_info($provider_id);
+  if ($provider_info) {
+    $class_name = $provider_info['class'];
+    module_load_include('php', 'staticmap', 'includes/MapProviderBase');
+    include_once $provider_info['path'] . '/' . $provider_info['filename'] . '.' . $provider_info['extension'];
+
+    if (class_exists($class_name)) {
+      $provider = new $class_name();
+      return $provider;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Loads aggregated field data. Modules can hook into this with hook_staticmap_field_alter.
+ */
+function staticmap_load_field_info($field_id = '') {
+  static $staticmap_fields = '';
+
+  if (empty($staticmap_fields)) {
+    $staticmap_fields = array();
+    drupal_alter('staticmap_field', $staticmap_fields);
+  }
+
+  if (empty($field_id)) {
+    return $staticmap_fields;
+  }
+  elseif (!empty($staticmap_fields[$field_id])) {
+    return $staticmap_fields[$field_id];
+  }
+
+  return FALSE;
+}
+
+/**
+ * Load fiels instance.
+ *
+ * @param int $field_id
+ *   Field ID.
+ *
+ * @return bool
+ *   Returns field instance or FALSE if not found.
+ */
+function staticmap_load_field($field_id) {
+  $field_info = staticmap_load_field_info($field_id);
+  if ($field_info) {
+    $class_name = $field_info['class'];
+    module_load_include('php', 'staticmap', 'includes/MapFieldBase');
+    include_once $field_info['path'] . '/' . $field_info['filename'] . '.' . $field_info['extension'];
+
+    if (class_exists($class_name)) {
+      $field = new $class_name();
+      return $field;
+    }
+  }
+
+  return FALSE;
+}
+
+/**
+ * Form for ctools export UI.
+ *
+ * @param array $form
+ *   Drupal form array.
+ *
+ * @param array $form_state
+ *   Drupal form state array.
+ *
+ * @return array
+ *   Returns drupal form.
+ */
+function staticmap_ctools_export_ui_form(&$form, &$form_state) {
+  $form = array();
+
+  $preset = $form_state['item'];
+  $preset_data = (!empty($form_state['item']->data)) ? unserialize($form_state['item']->data) : array();
+
+  $provider_info = staticmap_load_provider_info();
+  $provider_values = array();
+  foreach ($provider_info as $key => $info) {
+    $provider_values[$key] = $info['name'];
+  }
+
+  $values = array();
+  $values = array_merge($values, $preset_data);
+  $values = array_merge($values, (!empty($form_state['values'])) ? $form_state['values'] : array());
+
+  $form['title'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Title'),
+    '#default_value' => (!empty($values['title'])) ? $values['title'] : '',
+  );
+
+  $form['name'] = array(
+    '#type' => 'machine_name',
+    '#title' => t('Name'),
+    '#default_value' => (!empty($values['name'])) ? $values['name'] : '',
+    '#machine_name' => array(
+      'source' => array('title'),
+      'exists' => 'staticmap_preset_exists',
+    ),
+  );
+
+  $form['provider'] = array(
+    '#type' => 'select',
+    '#title' => t('Map Provider'),
+    '#options' => array_merge(array('' => '-blank-'), $provider_values),
+    '#default_value' => (!empty($values['provider'])) ? $values['provider'] : '',
+    '#ajax' => array(
+      'wrapper' => 'staticmap-ajax-wrapper',
+      'callback' => 'staticmap_ajax_callback',
+    ),
+  );
+
+  $form['mapsize'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Map Size'),
+    '#description' => 'Format: [width]x[height]',
+    '#default_value' => (!empty($values['mapsize'])) ? $values['mapsize'] : '',
+  );
+
+  $form['cache'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Cache files in public://'),
+    '#default_value' => !empty($values['cache']),
+  );
+
+  $form['staticmap_provider_specific'] = array(
+    '#type' => 'fieldset',
+    '#title' => (!empty($values['provider'])) ? t($values['provider'] . ' Settings') : '',
+    '#prefix' => '<div id="staticmap-ajax-wrapper">',
+    '#suffix' => '</div>',
+  );
+
+  if (!empty($values['provider'])) {
+    $provider = staticmap_load_provider($values['provider']);
+
+    $form['staticmap_provider_specific'] = array_merge($form['staticmap_provider_specific'], $provider->presetFormAlter($form, $form_state, $values));
+  }
+
+  return $form;
+}
+
+/**
+ * Callback for ajax form.
+ *
+ * @param array $form
+ *   Drupal form array.
+ *
+ * @param array $form_state
+ *   Drupal form state array.
+ *
+ * @return mixed
+ *   Return callback.
+ */
+function staticmap_ajax_callback($form, $form_state) {
+  return $form['staticmap_provider_specific'];
+}
+
+/**
+ * Validate handler for export UI form.
+ *
+ * @param array $form
+ *   Drupal form.
+ * @param array $form_state
+ *   Drupal form state.
+ */
+function staticmap_ctools_export_ui_form_validate(&$form, &$form_state) {
+  if (!preg_match('#^[0-9]*x[0-9]*$#', $form_state['values']['mapsize'])) {
+    form_error($form['mapsize'], t('Map size must be [width]x[height]'));
+  }
+
+  if ($form_state['op'] == 'add' && staticmap_preset_exists($form_state['values']['name'])) {
+    form_error($form['name'], t('A preset name <em>@name</em> already exists!', array('@name' => check_plain($form_state['values']['name']))));
+  }
+}
+
+/**
+ * Submit handler for ctools export form.
+ *
+ * @param array $form
+ *   Drupal form array.
+ *
+ * @param array $form_state
+ *   Drupal form state array.
+ */
+function staticmap_ctools_export_ui_form_submit(&$form, &$form_state) {
+  // @TODO: Generate data for export.
+  $data = $form_state['values'];
+  unset($data['submit']);
+  unset($data['delete']);
+  unset($data['form_build_id']);
+  unset($data['form_token']);
+  unset($data['form_id']);
+  unset($data['op']);
+  $form_state['item']->data = serialize($data);
+}
+
+/**
+ * Checks preset availability.
+ *
+ * @param string $value
+ *   Preset name.
+ *
+ * @return bool
+ *   Returns FALSE if not exixts, otherwise TRUE.
+ */
+function staticmap_preset_exists($value) {
+  $exists = db_query('SELECT name FROM {staticmap_presets} WHERE name = :name', array(':name' => $value))->fetchField();
+  if ($exists) {
+    return TRUE;
+  }
+  return FALSE;
+}
