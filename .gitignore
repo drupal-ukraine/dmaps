@@ -1,0 +1,6 @@
+# Ignore configuration files that may contain sensitive information.
+.idea
+*.iml
+.vagrant
+backup
+index.html

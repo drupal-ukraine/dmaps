@@ -1,0 +1,7 @@
+
+name = Silver Bells Stacked
+description = Shades of grey and white with bells. Author Pane on top.
+version = 2.x
+base style = silver_bells
+extra style = naked_stacked
+
