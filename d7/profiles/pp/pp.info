@@ -3,5 +3,21 @@ description = Start with only a few modules enabled.
 core = 7.x
 dependencies[] = block
 dependencies[] = dblog
+dependencies[] = menu
+dependencies[] = path
+dependencies[] = taxonomy
+dependencies[] = contextual
+dependencies[] = ctools
+dependencies[] = field_ui
+dependencies[] = file
+dependencies[] = list
+dependencies[] = options
+dependencies[] = number
+dependencies[] = image
+dependencies[] = views
+dependencies[] = views_ui
+dependencies[] = admin_menu
+dependencies[] = module_filter
+
 
 
