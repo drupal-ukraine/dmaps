@@ -1,6 +1,6 @@
 ---
 drupal_user: admin
-drupal_pass: propeople
+drupal_pass: admin
 installation_profile_name: pp
 mysql_user: root
 mysql_pass: root
@@ -10,9 +10,9 @@ cache_folder: /var/www/cache
 backup_folder: /var/www/backup
 tmp_folder: /tmp
 php_env_vars: 'APP_ENV=dev' # APP_ENV=dev - this varible will be set at PR_BUILDER from CI shell executor.
-site_url: 'http://drupal.192.168.56.132.xip.io/d8' # No trailing slash!
+site_url: 'http://drupal8.192.168.56.132.xip.io/d8' # No trailing slash!
 # Site url to download assets via stage_file_proxy.
-origin_site_url: 'http://192.168.56.132.xip.io/'
+origin_site_url: 'http://drupal8.192.168.56.132.xip.io/'
 # This variable will be used for variable_get('environment'). Can be overridden by CI server.
 # development = 'default', demo = 'demo', staging = 'staging', production = 'production'.
 pp_environment: 'default'
