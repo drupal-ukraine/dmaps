@@ -8,3 +8,14 @@ This is repository for development a new Drupal 8 module which include modules f
 PROJECT ON Drupal.org
 ----------------------
 https://www.drupal.org/project/dmaps
+
+ITERATIONS OF DEVELOPMENT:
+----------------------
+1. Port module Location module to Drupal 8
+2. Port submodules of location module to Drupal 8
+3. Port and union GMAP module to Drupal 8
+4. Port submodules of GMAP module to Drupal 8
+5. Port formatters from staticmap module to Drupal 8.
+6. Release first stable version.
+7. Add feature improvements.
+8. Release second stable version.
