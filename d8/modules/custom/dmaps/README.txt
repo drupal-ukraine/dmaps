@@ -1,7 +1,7 @@
 Maps for Drupal
 ---------------
 
-This project aims to merge gmap, location projects from D7 into D8+ lifetime
+This project aims to merge gmap, location and staticmap projects from D7 into D8+ lifetime
 
 RoadMap
 -------
