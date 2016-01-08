@@ -1,0 +1,5 @@
+{
+  "name": "drupal/dmaps",
+  "description": "The module allows you to associate a geographic location with content and users. Users can do proximity searches by postal code. This is useful for organizing communities that have a geographic presence. Views plugins to show Google Maps from entities.",
+  "type": "drupal-module"
+}
