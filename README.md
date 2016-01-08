@@ -1,4 +1,4 @@
-Drupal Vagrant Dev box for CIbox support
+Drupal Vagrant Dev box for CIbox-vm support for drupal's module porting flow
 ======
 
 #Installation
