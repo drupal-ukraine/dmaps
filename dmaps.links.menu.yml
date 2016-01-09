@@ -1,0 +1,6 @@
+dmaps.settings:
+  title: 'Maps for Drupal'
+  parent: system.admin_config_content
+  description: 'Maps settings.'
+  weight: -5
+  route_name: dmaps.settings

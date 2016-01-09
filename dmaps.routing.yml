@@ -1,0 +1,7 @@
+dmaps.settings:
+  path: admin/config/content/location
+  defaults:
+    _form: '\Drupal\dmaps\Form\DmapsSettingsForm'
+    _title: 'Main settings'
+  requirements:
+    _permission: administer site configuration
