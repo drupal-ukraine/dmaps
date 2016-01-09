@@ -1,0 +1,8 @@
+view location directory:
+  title: 'View location directory'
+view node location table:
+  title: 'View node location table'
+view user location table:
+  title: 'View user location table'
+submit latitude/longitude:
+  title: 'Submit latitude/longitude'
