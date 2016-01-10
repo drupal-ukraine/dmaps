@@ -36,6 +36,7 @@ class DmapsSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('dmaps.admin_settings');
 
+    // @todo List of countries will be added after adding location counties manager service.
     $iso_list_sorted = [];
     $form['location_default_country'] = [
       '#type' => 'select',
