@@ -96,7 +96,7 @@ class DmapsSettingsForm extends ConfigFormBase {
     $form['maplink_external']['location_maplink_external'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Open map link in new window'),
-      '#default_value' => $config->get('location_maplink_external'),
+      '#default_value' => $config->get('maplink_external.location_maplink_external'),
       '#description' => $this->t('Select this if you want the map link to open in a separate window.'),
     ];
     $form['maplink_external']['location_maplink_external_method'] = [
@@ -106,7 +106,7 @@ class DmapsSettingsForm extends ConfigFormBase {
         'target="_blank"' => 'target="_blank"',
         'rel="external"' => 'rel="external"',
       ],
-      '#default_value' => $config->get('location_maplink_external_method'),
+      '#default_value' => $config->get('maplink_external.location_maplink_external_method'),
       '#description' => $this->t('If you have selected to open map in a new window this controls the method used to open in a new window.  target="_blank" will just work but is not XTHML Strict compliant.  rel="external" is XHTML Strict compliant but will not open in a new window unless you add some jQuery to your site to add the target attribute. If you are unsure leave set to target="_blank".'),
     ];
 
