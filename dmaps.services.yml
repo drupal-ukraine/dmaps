@@ -1,0 +1,10 @@
+services:
+  cache.dmaps:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin }
+    factory: cache_factory:get
+    arguments: [dmaps]
+  dmaps.location_countries_manager:
+    class: Drupal\dmaps\DmapsLocationCountriesManager
+    arguments: ['@cache.dmaps']
