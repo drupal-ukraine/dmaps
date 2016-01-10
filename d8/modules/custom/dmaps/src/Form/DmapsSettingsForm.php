@@ -42,7 +42,6 @@ class DmapsSettingsForm extends ConfigFormBase {
     /** @var \Drupal\dmaps\DmapsLocationCountriesManager $countries_manager */
     $countries_manager = \Drupal::service('dmaps.location_countries_manager');
     $iso_list_sorted = $countries_manager->getIso3166List();
-    array_multisort($iso_list_sorted);
 
     $form['location_default_country'] = [
       '#type' => 'select',
@@ -76,9 +75,9 @@ class DmapsSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Use a Google Map to set latitude and longitude'),
       '#default_value' => $config->get('location_usegmap'),
       '#description' => $this->t('If the gmap.module is installed and <a href=":enabled">enabled</a>, and this setting is also turned on, users that are allowed to manually enter latitude/longitude coordinates will be able to do so with an interactive Google Map. You should also make sure you have entered a <a href=":google_maps_api_key">Google Maps API key</a> into your <a href=":gmap_module_settings">gmap module settings</a>.', [
-        ':enabled' => Url::fromRoute('system.modules_list'),
+        ':enabled' => Url::fromRoute('system.modules_list')->toString(),
         ':google_maps_api_key' => 'http://www.google.com/apis/maps',
-        ':gmap_module_settings' => Url::fromRoute('dmaps.settings'),
+        ':gmap_module_settings' => Url::fromRoute('dmaps.settings')->toString(),
       ]),
     ];
     $form['location_locpick_macro'] = [
@@ -102,7 +101,7 @@ class DmapsSettingsForm extends ConfigFormBase {
     $form['maplink_external']['location_maplink_external'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Open map link in new window'),
-      '#default_value' => $config->get('location_maplink_external'),
+      '#default_value' => $config->get('maplink_external.location_maplink_external'),
       '#description' => $this->t('Select this if you want the map link to open in a separate window.'),
     ];
     $form['maplink_external']['location_maplink_external_method'] = [
@@ -112,11 +111,29 @@ class DmapsSettingsForm extends ConfigFormBase {
         'target="_blank"' => 'target="_blank"',
         'rel="external"' => 'rel="external"',
       ],
-      '#default_value' => $config->get('location_maplink_external_method'),
+      '#default_value' => $config->get('maplink_external.location_maplink_external_method'),
       '#description' => $this->t('If you have selected to open map in a new window this controls the method used to open in a new window.  target="_blank" will just work but is not XTHML Strict compliant.  rel="external" is XHTML Strict compliant but will not open in a new window unless you add some jQuery to your site to add the target attribute. If you are unsure leave set to target="_blank".'),
     ];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->config('dmaps.admin_settings')
+      ->set('location_default_country', $form_state->getValue('location_default_country'))
+      ->set('location_display_location', $form_state->getValue('location_display_location'))
+      ->set('location_use_province_abbreviation', $form_state->getValue('location_use_province_abbreviation'))
+      ->set('location_usegmap', $form_state->getValue('location_usegmap'))
+      ->set('location_locpick_macro', $form_state->getValue('location_locpick_macro'))
+      ->set('location_jit_geocoding', $form_state->getValue('location_jit_geocoding'))
+      ->set('maplink_external.location_maplink_external', $form_state->getValue('location_maplink_external'))
+      ->set('maplink_external.location_maplink_external_method', $form_state->getValue('location_maplink_external_method'))
+      ->save();
+
+    parent::submitForm($form, $form_state);
   }
 
 }
