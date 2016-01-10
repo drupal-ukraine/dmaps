@@ -6,5 +6,5 @@ services:
     factory: cache_factory:get
     arguments: [dmaps]
   dmaps.location_countries_manager:
-    class: Drupal\dmaps\DmapsLocationCountriesManager
+    class: Drupal\dmaps\LocationCountriesManager
     arguments: ['@cache.dmaps']

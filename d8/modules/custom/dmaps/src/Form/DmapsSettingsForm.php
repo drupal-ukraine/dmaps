@@ -35,19 +35,17 @@ class DmapsSettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('dmaps.admin_settings');
-    // Recalculate the supported countries.
-    $cache = \Drupal::cache('dmaps');
-    $cache->deleteAll();
 
-    /** @var \Drupal\dmaps\DmapsLocationCountriesManager $countries_manager */
+    /** @var \Drupal\dmaps\LocationCountriesManager $countries_manager */
     $countries_manager = \Drupal::service('dmaps.location_countries_manager');
-    $iso_list_sorted = $countries_manager->getIso3166List();
+    // Rebuild the list of supported countries.
+    $countries_manager->rebuildSupportedList();
 
     $form['location_default_country'] = [
       '#type' => 'select',
       '#title' => $this->t('Default country selection'),
       '#default_value' => $config->get('location_default_country'),
-      '#options' => $iso_list_sorted,
+      '#options' => $countries_manager->getIso3166List(),
       '#description' => $this->t('This will be the country that is automatically selected when a location form is served for a new location.'),
     ];
     $form['location_display_location'] = [
