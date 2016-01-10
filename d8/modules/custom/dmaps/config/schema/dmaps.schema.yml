@@ -1,4 +1,6 @@
-dmaps.admin_settings
+# Schema for the configuration files of the Dmaps module.
+
+dmaps.admin_settings:
   type: config_object
   label: 'Admin Settings for module'
   mapping:
