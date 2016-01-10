@@ -36,7 +36,7 @@ class DmapsSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('dmaps.admin_settings');
 
-    // @todo List of countries will be added after adding location counties manager service.
+    // @todo List of countries will be added after adding location countries manager service.
     $iso_list_sorted = [];
     $form['location_default_country'] = [
       '#type' => 'select',
@@ -111,6 +111,24 @@ class DmapsSettingsForm extends ConfigFormBase {
     ];
 
     return parent::buildForm($form, $form_state);
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $this->config('dmaps.admin_settings')
+      ->set('location_default_country', $form_state->getValue('location_default_country'))
+      ->set('location_display_location', $form_state->getValue('location_display_location'))
+      ->set('location_use_province_abbreviation', $form_state->getValue('location_use_province_abbreviation'))
+      ->set('location_usegmap', $form_state->getValue('location_usegmap'))
+      ->set('location_locpick_macro', $form_state->getValue('location_locpick_macro'))
+      ->set('location_jit_geocoding', $form_state->getValue('location_jit_geocoding'))
+      ->set('maplink_external.location_maplink_external', $form_state->getValue('location_maplink_external'))
+      ->set('maplink_external.location_maplink_external_method', $form_state->getValue('location_maplink_external_method'))
+      ->save();
+
+    parent::submitForm($form, $form_state);
   }
 
 }
