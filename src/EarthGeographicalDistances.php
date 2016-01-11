@@ -7,7 +7,7 @@
 
 namespace Drupal\dmaps;
 
-class EarthService {
+class EarthGeographicalDistances {
 
   /**
    *  Radius of Earth semimajor.
