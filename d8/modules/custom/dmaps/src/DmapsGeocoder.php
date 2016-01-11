@@ -75,7 +75,13 @@ class DmapsGeocoder {
   }
 
   /**
-   * Google link.
+   * Form a Google link.
+   *
+   * @param array $location
+   *   Location to be processed.
+   *
+   * @return null|string
+   *   URL string if ok, NULL if error.
    */
   public function getGoogleLink($location = array()) {
     // Implements location_map_link_google().
@@ -93,6 +99,31 @@ class DmapsGeocoder {
     }
     else {
       return NULL;
+    }
+  }
+
+  /**
+   * Make country code canonical.
+   *
+   * @param string $country
+   *   Country code.
+   *
+   * @return bool
+   *   False if wrong, TRUE if ok.
+   */
+  public function setStdCountryCode(&$country) {
+    // Implements location_standardize_country_code().
+    $country = trim($country);
+    // @todo 8.x-1.x Double check the validity of this validity check. ;)
+    if (!ctype_alpha($country) || strlen($country) != 2) {
+      $country = 'xx';
+
+      return FALSE;
+    }
+    else {
+      $country = strtolower($country);
+
+      return TRUE;
     }
   }
 
