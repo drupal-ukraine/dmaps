@@ -1,0 +1,30 @@
+# Schema for the configuration files of the Dmaps module.
+
+dmaps.admin_settings:
+  type: config_object
+  label: 'Admin Settings for module'
+  mapping:
+    location_default_country:
+      type: string
+      label: 'Default country selection'
+    location_display_location:
+      type: integer
+      label: 'Toggle location display'
+    location_use_province_abbreviation:
+      type: integer
+      label: 'Province display'
+    location_usegmap:
+      type: boolean
+      label: 'Use a Google Map to set latitude and longitude'
+    location_locpick_macro:
+      type: string
+      label: 'Location chooser macro'
+    location_jit_geocoding:
+      type: boolean
+      label: 'Enable JIT geocoding'
+    location_maplink_external:
+      type: boolean
+      label: 'Open map link in new window'
+    location_maplink_external_method:
+      type: string
+      label: 'Open in new window method'
