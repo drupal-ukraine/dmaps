@@ -221,4 +221,52 @@ class DmapsGeocoder {
     return $address;
   }
 
+  /**
+   * Geocoder list.
+   */
+  function getGeocoders() {
+    // Implements location_get_general_geocoder_list()
+    $list = & drupal_static(__FUNCTION__, array());
+
+    if (!count($list)) {
+      $files = file_scan_directory(
+        drupal_get_path('module', 'dmaps') . '/geocoding',
+        '/\.inc$/',
+        array('nomask' => '/(\.\.?|CVS|\.svn)$/')
+      );
+      foreach ($files as $full_path_name => $fileinfo) {
+        $list[] = $fileinfo->name;
+      }
+    }
+
+    return $list;
+  }
+
+  /**
+   * The following is an array of all.
+   *
+   * countrycode => country-name pairs as layed out in
+   * ISO 3166-1 alpha-2
+   */
+  function getIso3166List($upper = FALSE) {
+    // Implements location_get_iso3166_list().
+
+    // Statically cache a version of the core Drupal list of countries
+    // with lower case country codes for use by this module.
+    $countries = & drupal_static(__FUNCTION__);
+
+    if ($upper) {
+      // Drupal core stores ISO 3166-1 alpha2 codes in upper case, as
+      // per the ISO standard.
+      return \Drupal::service('country_manager')->getList();
+    }
+    elseif (!isset($countries)) {
+      // Location module uses lower-case ISO 3166-1 alpha2 codes, so we need
+      // to convert.
+      $countries = \Drupal::service('dmaps.location_countries_manager')->getIso3166List();
+    }
+
+    return $countries;
+  }
+
 }
