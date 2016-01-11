@@ -162,4 +162,63 @@ class DmapsGeocoder {
     include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/geocoding/' . $geocoder . '.inc';
   }
 
+  /**
+   * Create a single line address.
+   *
+   * @param array $location
+   *   The address parts.
+   *
+   * @return string
+   *   The single line address.
+   */
+  function getAddrSingleline($location = array()) {
+    // Implements location_address2singleline().
+    // @todo 8.x-1.x - convert to trait.
+    // Check if its a valid address.
+    if (empty($location)) {
+      return '';
+    }
+
+    $address = '';
+    if (!empty($location['street'])) {
+      $address .= $location['street'];
+    }
+
+    if (!empty($location['city'])) {
+      if (!empty($location['street'])) {
+        $address .= ', ';
+      }
+
+      $address .= $location['city'];
+    }
+
+    if (!empty($location['province'])) {
+      if (!empty($location['street']) || !empty($location['city'])) {
+        $address .= ', ';
+      }
+
+      // @@@ Fix this!
+      if (substr($location['province'], 0, 3) == $location['country'] . '-') {
+        $address .= substr($location['province'], 3);
+        \Drupal::logger('Location')->critical('BUG: Country found in province attribute.');
+      }
+      else {
+        $address .= $location['province'];
+      }
+    }
+
+    if (!empty($location['postal_code'])) {
+      if (!empty($address)) {
+        $address .= ' ';
+      }
+      $address .= $location['postal_code'];
+    }
+
+    if (!empty($location['country'])) {
+      $address .= ', ' . $location['country'];
+    }
+
+    return $address;
+  }
+
 }
