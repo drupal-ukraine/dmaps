@@ -1,0 +1,3 @@
+services:
+  dmaps.earth_service:
+    class: Drupal\dmaps\EarthService
