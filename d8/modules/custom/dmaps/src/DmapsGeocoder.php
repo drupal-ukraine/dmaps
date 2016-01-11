@@ -153,4 +153,13 @@ class DmapsGeocoder {
     return FALSE;
   }
 
+  /**
+   * Load a general geocoding service.
+   */
+  public function initGeocoder($geocoder) {
+    // Implements location_load_geocoder();
+    // @todo 8.x-1.x - change to trait.
+    include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/geocoding/' . $geocoder . '.inc';
+  }
+
 }
