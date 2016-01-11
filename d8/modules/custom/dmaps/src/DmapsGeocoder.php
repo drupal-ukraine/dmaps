@@ -127,4 +127,30 @@ class DmapsGeocoder {
     }
   }
 
+  /**
+   * Load support for a country.
+   *
+   * This function will load support for a country identified by its two-letter ISO code.
+   *
+   * @param string $country
+   *   Two-letter ISO code for country.
+   *
+   * @return bool
+   *   TRUE if the file was found and loaded, FALSE otherwise.
+   */
+  public function getCountry($country) {
+    // Implements location_load_country().
+    $this->setStdCountryCode($country);
+
+    // @todo 8.x-2.x - convert to country plugins. Or even configs.
+    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/supported/location.' . $country . '.inc';
+    if (file_exists($file)) {
+      include_once $file;
+
+      return TRUE;
+    }
+
+    return FALSE;
+  }
+
 }
