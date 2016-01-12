@@ -36,13 +36,16 @@ class DmapsSettingsForm extends ConfigFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('dmaps.admin_settings');
 
-    // @todo List of countries will be added after adding location countries manager service.
-    $iso_list_sorted = [];
+    /** @var \Drupal\dmaps\LocationCountriesManager $countries_manager */
+    $countries_manager = \Drupal::service('dmaps.location_countries_manager');
+    // Rebuild the list of supported countries.
+    $countries_manager->rebuildSupportedList();
+
     $form['location_default_country'] = [
       '#type' => 'select',
       '#title' => $this->t('Default country selection'),
       '#default_value' => $config->get('location_default_country'),
-      '#options' => $iso_list_sorted,
+      '#options' => $countries_manager->getIso3166List(),
       '#description' => $this->t('This will be the country that is automatically selected when a location form is served for a new location.'),
     ];
     $form['location_display_location'] = [
@@ -70,9 +73,9 @@ class DmapsSettingsForm extends ConfigFormBase {
       '#title' => $this->t('Use a Google Map to set latitude and longitude'),
       '#default_value' => $config->get('location_usegmap'),
       '#description' => $this->t('If the gmap.module is installed and <a href=":enabled">enabled</a>, and this setting is also turned on, users that are allowed to manually enter latitude/longitude coordinates will be able to do so with an interactive Google Map. You should also make sure you have entered a <a href=":google_maps_api_key">Google Maps API key</a> into your <a href=":gmap_module_settings">gmap module settings</a>.', [
-        ':enabled' => Url::fromRoute('system.modules_list'),
+        ':enabled' => Url::fromRoute('system.modules_list')->toString(),
         ':google_maps_api_key' => 'http://www.google.com/apis/maps',
-        ':gmap_module_settings' => Url::fromRoute('dmaps.settings'),
+        ':gmap_module_settings' => Url::fromRoute('dmaps.settings')->toString(),
       ]),
     ];
     $form['location_locpick_macro'] = [
