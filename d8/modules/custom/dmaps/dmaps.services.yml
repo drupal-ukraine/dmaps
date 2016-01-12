@@ -8,3 +8,5 @@ services:
   dmaps.location_countries_manager:
     class: Drupal\dmaps\LocationCountriesManager
     arguments: ['@cache.dmaps']
+  dmaps.earth_service:
+    class: Drupal\dmaps\EarthGeographicalDistances
