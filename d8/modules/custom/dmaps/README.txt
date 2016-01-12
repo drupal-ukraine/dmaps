@@ -26,3 +26,20 @@ Frontend (View)
 - Investigate all forms for gmap and location modules
 - Decide what forms needs to be implemented into D8 version
 - Implements all forms
+
+Code features that are going to be services for dmaps
+-----------------------------------------------------
+1 Location:
+- earth.inc - Trigonometry for calculating geographical distances.
+- service for getting supported locations, now they are located in the folder /supported as separate files for each location.
+- Location geocoder - this is almost all functions from location.inc
+- possibly some other that can be allocated from the Location module.
+
+2 Gmap:
+- Gmap strings
+- Gmap marker
+- GmapPolylineToolbox
+- possibly some other that can be allocated from the Gmap module.
+
+3 StaticMap
+- Request to google API
