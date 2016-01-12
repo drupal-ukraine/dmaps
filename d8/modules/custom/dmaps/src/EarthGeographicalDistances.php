@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains Drupal\dmaps\EarthService.
+ * Contains Drupal\dmaps\EarthGeographicalDistances.
  */
 
 namespace Drupal\dmaps;
@@ -15,7 +15,7 @@ class EarthGeographicalDistances {
   const RADIUS_SEMIMAJOR = 6378137.0;
 
   /**
-   * Earth flattening
+   * Earth flattening.
    *
    * @var float
    */
@@ -70,6 +70,7 @@ class EarthGeographicalDistances {
    * @param $latitude
    *   Latitude value.
    * @param int $altitude
+   *   Altitude value (Height).
    * @return array
    *   Array of coordinates.
    */
@@ -177,13 +178,12 @@ class EarthGeographicalDistances {
     $lat = deg2rad($latitude);
     $radius = $this->getEarthRadius($latitude) * cos($lat);
 
+    $angle = pi();
     if ($radius > 0) {
       $angle = abs($distance / $radius);
       $angle = min($angle, pi());
     }
-    else {
-      $angle = pi();
-    }
+
     $minlong = $long - $angle;
     $maxlong = $long + $angle;
     if ($minlong < -pi()) {
