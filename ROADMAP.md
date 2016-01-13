@@ -18,35 +18,37 @@ RoadMap
 
 Code features that are going to be services for dmaps
 -----------------------------------------------------
-1 Location:
-[ ] earth.inc - Trigonometry for calculating geographical distances.
-- EarthGeographicalDistances()
-- include location_distance_between()
+### Location:
+- [ ] earth.inc - Trigonometry for calculating geographical distances.
 
-[x] service for getting supported locations, now they are located in the folder /supported as separate files for each location.
-- LocationCountriesManager()
+EarthGeographicalDistances()
+include location_distance_between()
 
-[ ] Province service
-- location_get_provinces()
-- location_province_name()
-- location_province_code()
+- [x] service for getting supported locations, now they are located in the folder /supported as separate files for each location.
+LocationCountriesManager()
 
-[ ] Map link service
-- location_map_link()
-- location_map_link_providers()
-- location_map_link_default_providers()
-- location_map_link_google()
+- [ ] Province service
+location_get_provinces()
+location_province_name()
+location_province_code()
 
-[ ] Location geocoder - this is almost all functions from location.inc
-- other functions from location.inc not included to other services
+- [ ] Map link service
+location_map_link()
+location_map_link_providers()
+location_map_link_default_providers()
+location_map_link_google()
 
-[ ] possibly some other that can be allocated from the Location module.
+- [ ] Location geocoder - this is almost all functions from location.inc
+other functions from location.inc not included to other services
 
-2 Gmap:
-[ ] Gmap strings
-[ ] Gmap marker
-[ ] GmapPolylineToolbox
-[ ] possibly some other that can be allocated from the Gmap module.
+- [ ] possibly some other that can be allocated from the Location module.
 
-3 StaticMap
-[ ] Request to google API
+### Gmap:
+- [ ] Gmap strings
+- [ ] Gmap marker
+- [ ] GmapPolylineToolbox
+- [ ] possibly some other that can be allocated from the Gmap module.
+
+### StaticMap
+------------
+- [ ] Request to google API
