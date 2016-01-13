@@ -10,6 +10,7 @@ Stable 8.x-1.0 release
 ### Partial unit tests
 
 * [ ] LocationCountriesManager
+* [ ] EarthGeographicalDistances
 
 ### Stable 8.x-2.0 release
 
