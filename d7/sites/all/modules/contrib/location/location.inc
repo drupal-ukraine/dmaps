@@ -528,6 +528,7 @@ function location_latlon_exact($location = array()) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Returns an associative array of countries currently supported by the location system where.
  *
  * -> the keys represent the two-letter ISO code and
@@ -605,6 +606,7 @@ function location_get_provinces($country = 'us') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Get the translated name of a country code.
  */
 function location_country_name($country = 'us') {
@@ -664,6 +666,7 @@ function location_province_code($country = 'us', $province = 'xx') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Canonicalize a country code.
  */
 function location_standardize_country_code(&$country) {
@@ -682,6 +685,7 @@ function location_standardize_country_code(&$country) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Load support for a country.
  *
  * This function will load support for a country identified by its two-letter ISO code.
@@ -791,6 +795,7 @@ function location_get_general_geocoder_list() {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * The following is an array of all.
  *
  * countrycode => country-name pairs as layed out in

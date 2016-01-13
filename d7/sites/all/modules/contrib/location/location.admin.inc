@@ -6,6 +6,7 @@
  */
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsSettingsForm
  * Admin settings form.
  *
  * @ingroup form
