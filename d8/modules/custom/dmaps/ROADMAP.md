@@ -18,17 +18,37 @@ RoadMap
 
 Code features that are going to be services for dmaps
 -----------------------------------------------------
-1. Location:
-- earth.inc - Trigonometry for calculating geographical distances.
-- service for getting supported locations, now they are located in the folder /supported as separate files for each location.
-- Location geocoder - this is almost all functions from location.inc
-- possibly some other that can be allocated from the Location module.
+### Location:
+- [ ] earth.inc - Trigonometry for calculating geographical distances.
 
-2. Gmap:
-- Gmap strings
-- Gmap marker
-- GmapPolylineToolbox
-- possibly some other that can be allocated from the Gmap module.
+EarthGeographicalDistances()
+include location_distance_between()
 
-3. StaticMap
-- Request to google API
+- [x] service for getting supported locations, now they are located in the folder /supported as separate files for each location.
+LocationCountriesManager()
+
+- [ ] Province service
+location_get_provinces()
+location_province_name()
+location_province_code()
+
+- [ ] Map link service
+location_map_link()
+location_map_link_providers()
+location_map_link_default_providers()
+location_map_link_google()
+
+- [ ] Location geocoder - this is almost all functions from location.inc
+other functions from location.inc not included to other services
+
+- [ ] possibly some other that can be allocated from the Location module.
+
+### Gmap:
+- [ ] Gmap strings
+- [ ] Gmap marker
+- [ ] GmapPolylineToolbox
+- [ ] possibly some other that can be allocated from the Gmap module.
+
+### StaticMap
+------------
+- [ ] Request to google API
