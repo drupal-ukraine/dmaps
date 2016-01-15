@@ -31,6 +31,10 @@
 // @codingStandardsIgnoreEnd
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\EarthGeographicalDistances
+ */
+
+/**
  * Earth redius semimajor.
  */
 function earth_radius_semimajor() {
