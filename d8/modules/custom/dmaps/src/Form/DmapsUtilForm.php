@@ -23,7 +23,7 @@ class DmapsUtilForm extends FormBase {
    * DmapsUtilForm constructor.
    */
   public function __construct() {
-    $this->cache = \Drupal::cache();
+    $this->cache = \Drupal::cache('dmaps');
   }
 
   /**
