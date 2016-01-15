@@ -5,3 +5,10 @@ dmaps.settings:
     _title: 'Main settings'
   requirements:
     _permission: 'administer site configuration'
+dmaps.location.util:
+  path: '/admin/config/content/location/util'
+  defaults:
+    _form: '\Drupal\dmaps\Form\DmapsUtilForm'
+    _title: 'Location utilities'
+  requirements:
+    _permission: 'administer site configuration'
