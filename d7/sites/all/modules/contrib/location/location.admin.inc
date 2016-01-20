@@ -390,6 +390,8 @@ function theme_location_geocoding_options($variables) {
 
 /**
  * Location Utilities form.
+ *
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsUtilForm
  */
 function location_util_form($form, &$form_state) {
   $form['province_clear'] = array(
