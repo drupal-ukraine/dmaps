@@ -10,3 +10,6 @@ services:
     arguments: ['@cache.dmaps']
   dmaps.earth_service:
     class: Drupal\dmaps\EarthGeographicalDistances
+  dmaps.geocoder:
+    class: Drupal\dmaps\DmapsGeocoder
+
