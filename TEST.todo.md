@@ -3,6 +3,7 @@ MVP release
 
 ToDO: WebTests for all forms and different values set through them
 * [ ] DmapsSettingsForm
+* [ ] DmapsUtilForm
 
 Stable 8.x-1.0 release
 =====
