@@ -17,13 +17,6 @@ use Drupal\simpletest\WebTestBase;
 class MainSettingsFormTest extends WebTestBase {
 
   /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  public static $modules = array('dmaps');
-
-  /**
    * {@inheritdoc}
    */
   protected function setUp() {
