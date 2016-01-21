@@ -8,7 +8,7 @@ services:
 
 env:
   - DB=mysql
-  
+
 before_install:
   # Make sure everything's up to date.
   - sudo apt-get update -qq
@@ -39,7 +39,7 @@ before_script:
 script:
     - drush --version
     - ls -la
-    - cd d8 
+    - cd d8
     - ansible-playbook reinstall.yml -i 'localhost,' --connection=local --extra-vars="mysql_db=af_test mysql_user=root mysql_pass="
     - drush status
-    # todo - drupal -vvv test:run --url http://default "\Drupal\advanced_forum\Tests\AdvancedForumControllerTest"
+    - drupal -vvv test:run --url http://default "\Drupal\dmaps\Tests\Form\MainSettingsFormTest"

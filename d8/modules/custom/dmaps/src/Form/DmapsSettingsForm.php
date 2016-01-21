@@ -102,6 +102,7 @@ class DmapsSettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('maplink_external.location_maplink_external'),
       '#description' => $this->t('Select this if you want the map link to open in a separate window.'),
     ];
+    // @todo add states, and enable this option if "Open map link in new window" is checked.
     $form['maplink_external']['location_maplink_external_method'] = [
       '#type' => 'radios',
       '#title' => $this->t('Open in new window method'),
