@@ -10,11 +10,25 @@ namespace Drupal\dmaps\Tests\Form;
 use Drupal\simpletest\WebTestBase;
 
 /**
- * Tests the MainSettingsFormTest class.
+ * Tests the main settings form.
  *
  * @group Form
  */
 class MainSettingsFormTest extends WebTestBase {
+
+  /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('dmaps');
+
+  /**
+   * A user that has permission to administer site configuration.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $web_user;
 
   /**
    * {@inheritdoc}
@@ -22,8 +36,8 @@ class MainSettingsFormTest extends WebTestBase {
   protected function setUp() {
     parent::setUp();
 
-    $web_user = $this->drupalCreateUser(['administer site configuration']);
-    $this->drupalLogin($web_user);
+    $this->web_user = $this->drupalCreateUser(['administer site configuration']);
+    $this->drupalLogin($this->web_user);
   }
 
   /**
