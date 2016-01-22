@@ -28,7 +28,7 @@ dmaps.admin_settings:
     location_maplink_external_method:
       type: string
       label: 'Open in new window method'
-dmaps.geocoding_settings:
+dmaps.geocoding_settings.*:
   type: config_object
   label: 'Geocoding settings'
   mapping:
