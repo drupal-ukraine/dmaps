@@ -8,7 +8,7 @@
  * Returns a list of accuracy codes as defined by the Google Maps API.
  *
  * @see http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy
- * @todo Move to Google geocoder service
+ * @todo 8.x-2.x Move to Google geocoder plugin
  */
 function dmaps_google_geocode_accuracy_codes() {
   return array(
