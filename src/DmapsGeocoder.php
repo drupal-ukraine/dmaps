@@ -128,32 +128,6 @@ class DmapsGeocoder {
   }
 
   /**
-   * Load support for a country.
-   *
-   * This function will load support for a country identified by its two-letter ISO code.
-   *
-   * @param string $country
-   *   Two-letter ISO code for country.
-   *
-   * @return bool
-   *   TRUE if the file was found and loaded, FALSE otherwise.
-   */
-  public function getCountry($country) {
-    // Implements location_load_country().
-    $this->setStdCountryCode($country);
-
-    // @todo 8.x-2.x - convert to country plugins. Or even configs.
-    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/supported/location.' . $country . '.inc';
-    if (file_exists($file)) {
-      include_once $file;
-
-      return TRUE;
-    }
-
-    return FALSE;
-  }
-
-  /**
    * Load a general geocoding service.
    */
   public function initGeocoder($geocoder) {
@@ -240,33 +214,6 @@ class DmapsGeocoder {
     }
 
     return $list;
-  }
-
-  /**
-   * The following is an array of all.
-   *
-   * countrycode => country-name pairs as layed out in
-   * ISO 3166-1 alpha-2
-   */
-  function getIso3166List($upper = FALSE) {
-    // Implements location_get_iso3166_list().
-
-    // Statically cache a version of the core Drupal list of countries
-    // with lower case country codes for use by this module.
-    $countries = & drupal_static(__FUNCTION__);
-
-    if ($upper) {
-      // Drupal core stores ISO 3166-1 alpha2 codes in upper case, as
-      // per the ISO standard.
-      return \Drupal::service('country_manager')->getList();
-    }
-    elseif (!isset($countries)) {
-      // Location module uses lower-case ISO 3166-1 alpha2 codes, so we need
-      // to convert.
-      $countries = \Drupal::service('dmaps.location_countries_manager')->getIso3166List();
-    }
-
-    return $countries;
   }
 
 }
