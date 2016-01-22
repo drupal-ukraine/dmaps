@@ -116,7 +116,7 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
 
         $form['countries'][$country_iso][$country_geocode_key] = [
           '#type' => 'radios',
-          '#default_value' => $config->get($country_geocode_key),
+          '#default_value' => $config->get($country_geocode_key) ? $config->get($country_geocode_key) : 'none',
           '#options' => $geocoding_options,
         ];
       }
@@ -166,7 +166,30 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
+  /**
+   * @inheritdoc
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    $config = $this->config('dmaps.geocoding_settings');
+    $general_geocoders =  \Drupal::service('dmaps.geocoder')->getGeocoders();
+    $general_geocoders_in_use = array();
+
+    $minimum_accuracy = $form_state->getValue('location_geocode_google_minimum_accuracy');
+    $config->set('location_geocode_google_minimum_accuracy', $minimum_accuracy);
+
+    $values = $form_state->getValues();
+    foreach ($values['countries'] as $country) {
+      $key = key($country);
+      $value = $country[$key];
+      if (in_array($value, $general_geocoders)) {
+        $general_geocoders_in_use[$value] = $value;
+        $config->set($key, $country[$key]);
+      }
+    }
+    $config->save();
+
+    \Drupal::state()->set('location_general_geocoders_in_use', $general_geocoders_in_use);
+
     parent::submitForm($form, $form_state);
   }
 }
