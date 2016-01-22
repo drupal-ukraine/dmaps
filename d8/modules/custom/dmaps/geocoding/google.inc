@@ -14,7 +14,8 @@
  * https://developers.google.com/maps/coverage
  */
 function google_geocode_country_list() {
-  $countries = location_get_iso3166_list();
+  $country_manager = \Drupal::service('dmaps.location_countries_manager');
+  $countries = $country_manager->getIso3166List();
   return array_keys($countries);
 }
 

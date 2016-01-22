@@ -35,3 +35,6 @@ dmaps.geocoding_settings:
     location_geocode_google_minimum_accuracy:
       type: integer
       label: 'Google Maps geocoding minimum accuracy'
+    location_general_geocoders_in_use:
+      type: integer
+      label: 'General geocoders in use'
