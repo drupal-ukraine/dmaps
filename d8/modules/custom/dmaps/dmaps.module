@@ -3,3 +3,24 @@
 /**
  * @file
  */
+
+/**
+ * Returns a list of accuracy codes as defined by the Google Maps API.
+ *
+ * @see http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy
+ * @todo 8.x-2.x Move to Google geocoder plugin
+ */
+function dmaps_google_geocode_accuracy_codes() {
+  return array(
+    0 => t('Unknown location'),
+    1 => t('Country level accuracy'),
+    2 => t('Region (state, province, prefecture, etc.) level accuracy'),
+    3 => t('Sub-region (county, municipality, etc.) level accuracy'),
+    4 => t('Town (city, village) level accuracy'),
+    5 => t('Post code (zip code) level accuracy'),
+    6 => t('Street level accuracy'),
+    7 => t('Intersection level accuracy'),
+    8 => t('Address level accuracy'),
+    9 => t('Premise (building name, property name, shopping center, etc.) level accuracy'),
+  );
+}

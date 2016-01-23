@@ -22,9 +22,23 @@ dmaps.admin_settings:
     location_jit_geocoding:
       type: boolean
       label: 'Enable JIT geocoding'
-    location_maplink_external:
-      type: boolean
-      label: 'Open map link in new window'
-    location_maplink_external_method:
-      type: string
-      label: 'Open in new window method'
+    maplink_external:
+          type: mapping
+          label: 'Map link'
+          mapping:
+            location_maplink_external:
+              type: boolean
+              label: 'Open map link in new window'
+            location_maplink_external_method:
+              type: string
+              label: 'Open in new window method'
+dmaps.geocoding_settings.*:
+  type: config_object
+  label: 'Geocoding settings'
+  mapping:
+    location_geocode_google_minimum_accuracy:
+      type: integer
+      label: 'Google Maps geocoding minimum accuracy'
+    location_general_geocoders_in_use:
+      type: integer
+      label: 'General geocoders in use'
