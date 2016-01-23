@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests the main settings form.
  *
- * @group Form
+ * @group dmaps
  */
 class MainSettingsFormTest extends WebTestBase {
 
