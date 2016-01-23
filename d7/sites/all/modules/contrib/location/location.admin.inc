@@ -182,6 +182,8 @@ function location_map_link_options_form($form, &$form_state) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsGeocodingOptionsForm
+ *
  * Options form.
  */
 function location_geocoding_options_form($form, &$form_state) {
