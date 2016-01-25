@@ -48,6 +48,5 @@ function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route
       $output .= '<dt>' . t('use a database dump for a U.S. and/or German postal codes table that can be found at <a href=":external-http-cvs-d-org">zipcode database</a>.', array(':external-http-cvs-d-org' => "http://cvs.drupal.org/viewcvs/drupal/contributions/modules/location/database/")) . '</dt>';
       $output .= '<p>' . t('For more information read the configuration and customization handbook <a href=":location">Location page</a>.', array(':location' => 'http://www.drupal.org/handbook/modules/location/')) . '</p>';
       return $output;
-      break;
   }
 }
