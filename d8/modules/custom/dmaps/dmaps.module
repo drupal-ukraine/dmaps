@@ -39,10 +39,16 @@ function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route
       $output .= '<p>' . t('To administer locative information for content, use the content type administration page.  To support most location enabled features, you will need to install the country specific include file.  To support postal code proximity searches for a particular country, you will need a database dump of postal code data for that country.  As of June 2007 only U.S. and German postal codes are supported.') . '</p>';
       $output .= '<h3>' . t('Uses') . '</h3>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('administer locative information at <a href=":admin-content-types">Administer &gt;&gt; Content management &gt;&gt; Content types</a> to configure a type and see the locative information.',  array(':admin-content-types' => Url::fromRoute('entity.node_type.collection')->toString())) . '</dt>';
+      $output .= '<dt>' . t('administer locative information at <a href=":admin-content-types">Administer &gt;&gt; Content management &gt;&gt; Content types</a> to configure a type and see the locative information.', [
+          ':admin-content-types' => Url::fromRoute('entity.node_type.collection')
+            ->toString()
+        ]) . '</dt>';
       $output .= '</dl>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('administer dmaps at <a href=":admin-settings">Administer &gt;&gt; Site configuration &gt;&gt; Dmaps</a>.', array(':admin-settings' => URL::fromRoute('dmaps.settings')->toString())) . '</dt>';
+      $output .= '<dt>' . t('administer dmaps at <a href=":admin-settings">Administer &gt;&gt; Site configuration &gt;&gt; Dmaps</a>.', [
+          ':admin-settings' => URL::fromRoute('dmaps.settings')
+            ->toString()
+        ]) . '</dt>';
       $output .= '</dl>';
       $output .= '<dl>';
       $output .= '<dt>' . t('use a database dump for a U.S. and/or German postal codes table that can be found at <a href=":external-http-cvs-d-org">zipcode database</a>.', array(':external-http-cvs-d-org' => "http://cvs.drupal.org/viewcvs/drupal/contributions/modules/location/database/")) . '</dt>';
