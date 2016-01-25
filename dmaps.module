@@ -41,18 +41,23 @@ function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route
       $output .= '<dl>';
       $output .= '<dt>' . t('administer locative information at <a href=":admin-content-types">Administer &gt;&gt; Content management &gt;&gt; Content types</a> to configure a type and see the locative information.', [
           ':admin-content-types' => Url::fromRoute('entity.node_type.collection')
-            ->toString()
+            ->toString(),
         ]) . '</dt>';
       $output .= '</dl>';
       $output .= '<dl>';
       $output .= '<dt>' . t('administer dmaps at <a href=":admin-settings">Administer &gt;&gt; Site configuration &gt;&gt; Dmaps</a>.', [
           ':admin-settings' => URL::fromRoute('dmaps.settings')
-            ->toString()
+            ->toString(),
         ]) . '</dt>';
       $output .= '</dl>';
       $output .= '<dl>';
-      $output .= '<dt>' . t('use a database dump for a U.S. and/or German postal codes table that can be found at <a href=":external-http-cvs-d-org">zipcode database</a>.', [':external-http-cvs-d-org' => "http://cvs.drupal.org/viewcvs/drupal/contributions/modules/location/database/"]) . '</dt>';
-      $output .= '<p>' . t('For more information read the configuration and customization handbook <a href=":location">Location page</a>.', [':location' => 'http://www.drupal.org/handbook/modules/location/']) . '</p>';
+      $output .= '<dt>' . t('use a database dump for a U.S. and/or German postal codes table that can be found at <a href=":external-http-cvs-d-org">zipcode database</a>.', [
+          ':external-http-cvs-d-org' => "http://cvs.drupal.org/viewcvs/drupal/contributions/modules/location/database/",
+        ]) . '</dt>';
+      $output .= '<p>' . t('For more information read the configuration and customization handbook <a href=":location">Location page</a>.', [
+          ':location' => 'http://www.drupal.org/handbook/modules/location/',
+        ]) . '</p>';
+
       return $output;
   }
 }
