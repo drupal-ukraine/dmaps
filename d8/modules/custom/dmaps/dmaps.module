@@ -4,6 +4,8 @@
  * @file
  */
 
+use \Drupal\Core\Url;
+
 /**
  * Returns a list of accuracy codes as defined by the Google Maps API.
  *
@@ -23,4 +25,29 @@ function dmaps_google_geocode_accuracy_codes() {
     8 => t('Address level accuracy'),
     9 => t('Premise (building name, property name, shopping center, etc.) level accuracy'),
   );
+}
+
+/**
+ * Implements hook_help().
+ */
+function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.dmaps':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('The dmaps module allows you to associate a geographic location with content and users. Users can do proximity searches by postal code.  This is useful for organizing communities that have a geographic presence.') . '</p>';
+      $output .= '<p>' . t('To administer locative information for content, use the content type administration page.  To support most location enabled features, you will need to install the country specific include file.  To support postal code proximity searches for a particular country, you will need a database dump of postal code data for that country.  As of June 2007 only U.S. and German postal codes are supported.') . '</p>';
+      $output .= '<h3>' . t('Uses') . '</h3>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('administer locative information at <a href=":admin-content-types">Administer &gt;&gt; Content management &gt;&gt; Content types</a> to configure a type and see the locative information.',  array(':admin-content-types' => Url::fromRoute('entity.node_type.collection')->toString())) . '</dt>';
+      $output .= '</dl>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('administer dmaps at <a href=":admin-settings">Administer &gt;&gt; Site configuration &gt;&gt; Dmaps</a>.', array(':admin-settings' => URL::fromRoute('dmaps.settings')->toString())) . '</dt>';
+      $output .= '</dl>';
+      $output .= '<dl>';
+      $output .= '<dt>' . t('use a database dump for a U.S. and/or German postal codes table that can be found at <a href=":external-http-cvs-d-org">zipcode database</a>.', array(':external-http-cvs-d-org' => "http://cvs.drupal.org/viewcvs/drupal/contributions/modules/location/database/")) . '</dt>';
+      $output .= '<p>' . t('For more information read the configuration and customization handbook <a href=":location">Location page</a>.', array(':location' => 'http://www.drupal.org/handbook/modules/location/')) . '</p>';
+      return $output;
+      break;
+  }
 }
