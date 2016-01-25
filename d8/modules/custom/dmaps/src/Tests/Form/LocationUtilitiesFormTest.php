@@ -41,18 +41,28 @@ class LocationUtilitiesFormTest extends WebTestBase {
   }
 
   /**
-   * Testing Main settings form for Dmaps module.
+   * Testing Location Utils form for Dmaps module.
+   * Clearing provinces cache.
    *
    * @throws \Exception
    *   Exceptions if tests failed.
    */
   function testClearProvincesButton() {
     $this->drupalGet('/admin/config/content/location/util');
+    $this->drupalPostForm('/admin/config/content/location/util', [], t('Clear province cache'));
     $this->assertText(t('Location province cache cleared.'));
   }
 
+  /**
+   * Testing Location Utils form for Dmaps module.
+   * Clearing supported countries cache.
+   *
+   * @throws \Exception
+   *   Exceptions if tests failed.
+   */
   function testClearCountriesButton() {
     $this->drupalGet('/admin/config/content/location/util');
+    $this->drupalPostForm('/admin/config/content/location/util', [], t('Clear supported country list'));
     $this->assertText(t('Location supported country list cleared.'));
   }
 
