@@ -8,7 +8,7 @@ dmaps.locations.geocoding_options:
   title: 'Geocoding options'
   route_name: dmaps.locations.geocoding_options
   base_route: dmaps.settings
-  weight: 3
+  weight: 2
 
 dmaps.location.util:
   title: 'Location utilities'
