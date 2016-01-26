@@ -10,7 +10,6 @@ namespace Drupal\dmaps\Form;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 
-
 class DmapsGeocodingOptionsForm extends ConfigFormBase {
 
   /**
@@ -41,15 +40,17 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
       '#title' => $this->t('Google Maps geocoding minimum accuracy'),
       '#options' => dmaps_google_geocode_accuracy_codes(),
       '#default_value' => $config->get('location_geocode_google_minimum_accuracy'),
-      '#description' => $this->t('The Google Maps geocoding API returns results with a given accuracy. Any responses below this minimum accuracy will be ignored. See a !accuracy_values_link.',
-        ['!accuracy_values_link' => '<a href="http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy">' . t('description of these values') . '</a>']
-      )
+      '#description' => $this->t('The Google Maps geocoding API returns results with a given accuracy. Any responses below this minimum accuracy will be ignored. See a !accuracy_values_link.', ['!accuracy_values_link' => '<a href="http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy">' . t('description of these values') . '</a>']),
     ];
 
     $form['countries'] = [
       '#type' => 'table',
       '#title' => $this->t('Geocoding Options'),
-      '#header' => array($this->t('Country'), $this->t('Options'), $this->t('Configure')),
+      '#header' => [
+        $this->t('Country'),
+        $this->t('Options'),
+        $this->t('Configure'),
+      ],
     ];
 
     // First, we build two arrays to help us figure out on the fly whether a specific country is covered by a multi-country geocoder,
@@ -57,8 +58,8 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
     // (1) Get list of geocoders.
     $general_geocoders_list = $geocoder->getGeocoders();
     // (2) get data about each geocoder and the list of countries covered by each geocoder.
-    $general_geocoders_data = array();
-    $general_geocoders_countries = array();
+    $general_geocoders_data = [];
+    $general_geocoders_countries = [];
     foreach ($general_geocoders_list as $geocoder_name) {
       $geocoder->initGeocoder($geocoder_name);
       $info_function = $geocoder_name . '_geocode_info';
@@ -171,8 +172,8 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('dmaps.geocoding_settings');
-    $general_geocoders =  \Drupal::service('dmaps.geocoder')->getGeocoders();
-    $general_geocoders_in_use = array();
+    $general_geocoders = \Drupal::service('dmaps.geocoder')->getGeocoders();
+    $general_geocoders_in_use = [];
 
     $minimum_accuracy = $form_state->getValue('location_geocode_google_minimum_accuracy');
     $config->set('location_geocode_google_minimum_accuracy', $minimum_accuracy);
@@ -188,7 +189,8 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
     }
     $config->save();
 
-    \Drupal::state()->set('location_general_geocoders_in_use', $general_geocoders_in_use);
+    \Drupal::state()
+      ->set('location_general_geocoders_in_use', $general_geocoders_in_use);
 
     parent::submitForm($form, $form_state);
   }

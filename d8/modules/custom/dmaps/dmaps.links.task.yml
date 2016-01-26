@@ -1,0 +1,17 @@
+dmaps.settings:
+  title: 'Main settings'
+  route_name: dmaps.settings
+  base_route: dmaps.settings
+  weight: 1
+
+dmaps.locations.geocoding_options:
+  title: 'Geocoding options'
+  route_name: dmaps.locations.geocoding_options
+  base_route: dmaps.settings
+  weight: 2
+
+dmaps.location.util:
+  title: 'Location utilities'
+  route_name: dmaps.location.util
+  base_route: dmaps.settings
+  weight: 3
