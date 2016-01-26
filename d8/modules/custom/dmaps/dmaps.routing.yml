@@ -5,6 +5,7 @@ dmaps.settings:
     _title: 'Main settings'
   requirements:
     _permission: 'administer site configuration'
+
 dmaps.location.util:
   path: '/admin/config/content/location/util'
   defaults:
@@ -12,6 +13,7 @@ dmaps.location.util:
     _title: 'Location utilities'
   requirements:
     _permission: 'administer site configuration'
+
 dmaps.locations.geocoding_options:
   path: 'admin/config/content/location/geocoding'
   defaults:
