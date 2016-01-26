@@ -49,6 +49,7 @@ class EarthGeographicalDistances {
    *
    * @param float $latitude
    *   Latitude value.
+   *
    * @return float
    *   Radius for given latitude.
    */
@@ -71,6 +72,7 @@ class EarthGeographicalDistances {
    *   Latitude value.
    * @param int $altitude
    *   Altitude value (Height).
+   *
    * @return array
    *   Array of coordinates.
    */
@@ -87,7 +89,7 @@ class EarthGeographicalDistances {
     $y = ($radius + $altitude) * $coslat * $sinlong;
     $z = ($radius * (1 - $this->eccentricity_sq) + $altitude) * $sinlat;
 
-    return array($x, $y, $z);
+    return [$x, $y, $z];
   }
 
   /**
@@ -97,6 +99,7 @@ class EarthGeographicalDistances {
    *   Angle value.
    * @param float $latitude
    *   Latitude value.
+   *
    * @return float
    *   Distance value.
    */
@@ -115,6 +118,7 @@ class EarthGeographicalDistances {
    *   Longitude value of second location.
    * @param $latitude2
    *   Latitude value of second location.
+   *
    * @return float
    *   Distance value.
    */
@@ -125,9 +129,7 @@ class EarthGeographicalDistances {
     $lat2 = deg2rad($latitude2);
     $radius = $this->getEarthRadius(($latitude1 + $latitude2) / 2);
 
-    $cosangle = cos($lat1) * cos($lat2) *
-      (cos($long1) * cos($long2) + sin($long1) * sin($long2)) +
-      sin($lat1) * sin($lat2);
+    $cosangle = cos($lat1) * cos($lat2) * (cos($long1) * cos($long2) + sin($long1) * sin($long2)) + sin($lat1) * sin($lat2);
 
     return acos($cosangle) * $radius;
   }
@@ -141,6 +143,7 @@ class EarthGeographicalDistances {
    *   The measurement point.
    * @param string $tbl_alias
    *   If necessary, the alias name of the location table to work from.  Only required when working with named {location} tables.
+   *
    * @return string
    *   SQL fragment.
    */
@@ -170,6 +173,7 @@ class EarthGeographicalDistances {
    *   Latitude value.
    * @param $distance
    *   Distance value.
+   *
    * @return array
    *   Array with min and max longitudes.
    */
@@ -193,7 +197,7 @@ class EarthGeographicalDistances {
       $maxlong = $maxlong - pi() * 2;
     }
 
-    return array(rad2deg($minlong), rad2deg($maxlong));
+    return [rad2deg($minlong), rad2deg($maxlong)];
   }
 
   /**
@@ -205,6 +209,7 @@ class EarthGeographicalDistances {
    *   Latitude value.
    * @param $distance
    *   Distance value.
+   *
    * @return array
    *   Array with min and max latitudes.
    */
@@ -236,6 +241,6 @@ class EarthGeographicalDistances {
       $maxlat = $rightangle;
     }
 
-    return array(rad2deg($minlat), rad2deg($maxlat));
+    return [rad2deg($minlat), rad2deg($maxlat)];
   }
 }
