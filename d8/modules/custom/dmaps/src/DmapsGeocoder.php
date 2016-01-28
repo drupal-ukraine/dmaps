@@ -41,11 +41,11 @@ class DmapsGeocoder {
     // Implements location_map_link_providers().
     // @todo 8.x-2.x - Convert to plugins.
     return array(
-      'google' => array(
+      'google' => [
         'name' => t('Google Maps'),
         'url' => 'http://maps.google.com',
         'tos' => 'http://www.google.com/help/terms_local.html',
-      ),
+      ],
     );
   }
 
@@ -71,7 +71,7 @@ class DmapsGeocoder {
   public function getDefaultMapProviders() {
     // Implements location_map_link_default_providers().
     // @todo 8.x-2.x - convert all providers to plugins.
-    return array('google');
+    return ['google'];
   }
 
   /**
@@ -83,12 +83,13 @@ class DmapsGeocoder {
    * @return null|string
    *   URL string if ok, NULL if error.
    */
-  public function getGoogleLink($location = array()) {
+  public function getGoogleLink($location = []) {
     // Implements location_map_link_google().
     // @todo 8.x-2.x - should be a part of Google provider plugin.
-    $query_params = array();
+    $query_params = [];
 
-    foreach (array('street', 'city', 'province', 'postal_code', 'country') as $field) {
+    foreach (['street', 'city', 'province', 'postal_code', 'country'] as $field)
+    {
       if (isset($location[$field])) {
         $query_params[] = $location[$field];
       }
@@ -97,9 +98,7 @@ class DmapsGeocoder {
     if (count($query_params)) {
       return ('http://maps.google.com?q=' . urlencode(implode(", ", $query_params)));
     }
-    else {
-      return NULL;
-    }
+    return NULL;
   }
 
   /**
@@ -120,11 +119,9 @@ class DmapsGeocoder {
 
       return FALSE;
     }
-    else {
-      $country = strtolower($country);
+    $country = strtolower($country);
 
-      return TRUE;
-    }
+    return TRUE;
   }
 
   /**
@@ -145,7 +142,7 @@ class DmapsGeocoder {
    * @return string
    *   The single line address.
    */
-  function getAddrSingleline($location = array()) {
+  function getAddrSingleline($location = []) {
     // Implements location_address2singleline().
     // @todo 8.x-1.x - convert to trait.
     // Check if its a valid address.
@@ -174,7 +171,8 @@ class DmapsGeocoder {
       // @@@ Fix this!
       if (substr($location['province'], 0, 3) == $location['country'] . '-') {
         $address .= substr($location['province'], 3);
-        \Drupal::logger('Location')->critical('BUG: Country found in province attribute.');
+        \Drupal::logger('Location')
+          ->critical('BUG: Country found in province attribute.');
       }
       else {
         $address .= $location['province'];
@@ -200,14 +198,10 @@ class DmapsGeocoder {
    */
   function getGeocoders() {
     // Implements location_get_general_geocoder_list()
-    $list = & drupal_static(__FUNCTION__, array());
+    $list = &drupal_static(__FUNCTION__, []);
 
     if (!count($list)) {
-      $files = file_scan_directory(
-        drupal_get_path('module', 'dmaps') . '/geocoding',
-        '/\.inc$/',
-        array('nomask' => '/(\.\.?|CVS|\.svn)$/')
-      );
+      $files = file_scan_directory(drupal_get_path('module', 'dmaps') . '/geocoding', '/\.inc$/', ['nomask' => '/(\.\.?|CVS|\.svn)$/']);
       foreach ($files as $full_path_name => $fileinfo) {
         $list[] = $fileinfo->name;
       }

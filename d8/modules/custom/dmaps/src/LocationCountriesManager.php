@@ -26,7 +26,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
    * @inheritdoc
    */
   public function getSupportedList() {
-    $supported_countries = &drupal_static(__FUNCTION__, array());
+    $supported_countries = &drupal_static(__FUNCTION__, []);
 
     // If this function has already been called this request, we can avoid a DB hit.
     if (!empty($supported_countries)) {

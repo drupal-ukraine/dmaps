@@ -12,7 +12,7 @@ use Drupal\simpletest\WebTestBase;
 /**
  * Tests the main settings form.
  *
- * @group Form
+ * @group dmaps
  */
 class MainSettingsFormTest extends WebTestBase {
 
@@ -21,7 +21,7 @@ class MainSettingsFormTest extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('dmaps');
+  public static $modules = ['dmaps'];
 
   /**
    * A user that has permission to administer site configuration.
