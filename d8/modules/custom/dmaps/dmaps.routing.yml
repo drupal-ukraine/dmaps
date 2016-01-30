@@ -21,3 +21,18 @@ dmaps.locations.geocoding_options:
     _title: 'Geocoding options'
   requirements:
     _permission: 'administer site configuration'
+
+dmaps.locations.geocoder_options:
+  path: 'admin/config/content/location/geocoding/{iso}/{service}'
+  defaults:
+    _form: '\Drupal\dmaps\Form\DmapsGeocoderOptionsForm'
+    _title: 'Geocoder options'
+    _title_callback: '\Drupal\dmaps\Form\DmapsGeocoderOptionsForm::getPagetitle'
+  requirements:
+    _permission: 'administer site configuration'
+  options:
+    parameters:
+      iso:
+        type: string
+      service:
+        type: string

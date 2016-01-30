@@ -35,14 +35,6 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
     $geocoder = \Drupal::service('dmaps.geocoder');
     $country_manager = \Drupal::service('dmaps.location_countries_manager');
 
-    $form['location_geocode_google_minimum_accuracy'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Google Maps geocoding minimum accuracy'),
-      '#options' => dmaps_google_geocode_accuracy_codes(),
-      '#default_value' => $config->get('location_geocode_google_minimum_accuracy'),
-      '#description' => $this->t('The Google Maps geocoding API returns results with a given accuracy. Any responses below this minimum accuracy will be ignored. See a !accuracy_values_link.', ['!accuracy_values_link' => '<a href="http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy">' . t('description of these values') . '</a>']),
-    ];
-
     $form['countries'] = [
       '#type' => 'table',
       '#title' => $this->t('Geocoding Options'),
