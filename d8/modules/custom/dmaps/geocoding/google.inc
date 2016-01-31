@@ -120,7 +120,7 @@ function google_geocode_location($location = array()) {
 /**
  * General settings for this geocoder.
  */
-function google_geocode_settings($country, $config) {
+function google_geocode_settings($country, &$config) {
   $form = [];
   // @todo Refactor when
   $form['location_geocode_google_apikey'] = [

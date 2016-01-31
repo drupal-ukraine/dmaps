@@ -43,9 +43,11 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
    * @inheritdoc
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('dmaps.geocoder_' . $this->iso . '_' . $this->service . '_settings');
+    $config_name = 'dmaps.geocoder.' . $this->service . '_' . $this->iso;
+    $config = \Drupal::configFactory()->getEditable($config_name);
     $country_manager = \Drupal::service('dmaps.location_countries_manager');
     $country_manager->locationLoadCountry($this->iso);
+
     // @todo Need to refactor when geocoder plugins will be implemented
     $geocode_settings_form_function_specific = 'location_geocode_' . $this->iso . '_' . $this->service . '_settings';
     $geocode_settings_form_function_general = $this->service . '_geocode_settings';
@@ -80,5 +82,21 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
     return $this->t('Configure parameters for %service geocoding', ['%service' => $this->service]);
   }
 
+  /**
+   * @inheritdoc
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    $config_name = 'dmaps.geocoder.' . $this->service . '_' . $this->iso;
+    $config = \Drupal::configFactory()->getEditable($config_name);
+    $values = $form_state->getValues();
+    $exclude = ['submit', 'op', 'form_build_id', 'form_token', 'form_id'];
+    foreach ($values as $key => $value) {
+      if (!in_array($key, $exclude)) {
+        $config->set($key, $value);
+      }
+    }
+    $config->save();
+    parent::submitForm($form, $form_state);
+  }
 
 }
