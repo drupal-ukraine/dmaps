@@ -6,6 +6,7 @@
  */
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsSettingsForm
  * Admin settings form.
  *
  * @ingroup form
@@ -181,6 +182,8 @@ function location_map_link_options_form($form, &$form_state) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsGeocodingOptionsForm
+ *
  * Options form.
  */
 function location_geocoding_options_form($form, &$form_state) {
@@ -389,6 +392,8 @@ function theme_location_geocoding_options($variables) {
 
 /**
  * Location Utilities form.
+ *
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsUtilForm
  */
 function location_util_form($form, &$form_state) {
   $form['province_clear'] = array(

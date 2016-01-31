@@ -1,0 +1,23 @@
+dmaps.settings:
+  path: '/admin/config/content/location'
+  defaults:
+    _form: '\Drupal\dmaps\Form\DmapsSettingsForm'
+    _title: 'Main settings'
+  requirements:
+    _permission: 'administer site configuration'
+
+dmaps.location.util:
+  path: '/admin/config/content/location/util'
+  defaults:
+    _form: '\Drupal\dmaps\Form\DmapsUtilForm'
+    _title: 'Location utilities'
+  requirements:
+    _permission: 'administer site configuration'
+
+dmaps.locations.geocoding_options:
+  path: 'admin/config/content/location/geocoding'
+  defaults:
+    _form: '\Drupal\dmaps\Form\DmapsGeocodingOptionsForm'
+    _title: 'Geocoding options'
+  requirements:
+    _permission: 'administer site configuration'

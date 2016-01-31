@@ -41,6 +41,7 @@ include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'location') . '/earth
  * @ingroup Location
  */
 function location_map_link($location = array(), $link_text = 'See map: ') {
+  // @todo MVP port location_map_link for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!isset($location['country']) || $location['country'] == 'xx') {
     return '';
   }
@@ -109,6 +110,8 @@ function location_map_link($location = array(), $link_text = 'See map: ') {
  *        'http://www.google.com/help/terms_local.html'
  */
 function location_map_link_providers() {
+  // @d8 location_map_link_providers() -> \Drupal::service('dmaps.geocoder')->getMapProviders();
+
   return array(
     'google' => array(
       'name' => t('Google Maps'),
@@ -138,6 +141,7 @@ function location_map_link_providers() {
  *   Terms Of Service.
  */
 function location_map_link_default_providers() {
+  // @d8 location_map_link_default_providers() -> \Drupal::service('dmaps.geocoder')->getDefaultMapProviders();
   return array('google');
 }
 
@@ -145,6 +149,8 @@ function location_map_link_default_providers() {
  * Google link.
  */
 function location_map_link_google($location = array()) {
+  // @d8 location_map_link_google() -> \Drupal::service('dmaps.geocoder')->getGoogleLink();
+
   $query_params = array();
 
   foreach (array('street', 'city', 'province', 'postal_code', 'country') as $field) {
@@ -184,6 +190,7 @@ function location_map_link_google($location = array()) {
  * @ingroup Location
  */
 function location_get_postalcode_data($location = array()) {
+  // @todo MVP port location_get_postalcode_data for https://github.com/drupal-ukraine/dmaps/pull/40
   $location['country'] = isset($location['country']) ? trim($location['country']) : NULL;
   $location['postal_code'] = isset($location['postal_code']) ? trim($location['postal_code']) : NULL;
   if (is_null($location['postal_code']) || is_null(
@@ -227,6 +234,7 @@ function location_get_postalcode_data($location = array()) {
  * @ingroup Location
  */
 function location_distance_between($latlon_a = array(), $latlon_b = array(), $distance_unit = 'km') {
+  // @todo MVP port location_distance_between for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!isset($latlon_a['lon']) || !isset($latlon_a['lat']) || !isset($latlon_b['lon']) || !isset($latlon_b['lat'])) {
     return NULL;
   }
@@ -284,6 +292,7 @@ function location_distance_between($latlon_a = array(), $latlon_b = array(), $di
  * @ingroup Location
  */
 function location_driving_directions_link($location_a = array(), $location_b = array(), $link_text = 'Get directions') {
+  // @todo MVP port location_driving_directions_link for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!isset($location_a['country']) or !isset($location_b['country'])) {
     return '';
   }
@@ -324,6 +333,7 @@ function location_driving_directions_link($location_a = array(), $location_b = a
  *   This is done after the $distance_unit parmeter is forced to be 'km' or 'mile'
  */
 function _location_convert_distance_to_meters($distance, $distance_unit = 'km') {
+  // @todo MVP port _location_convert_distance_to_meters for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!is_numeric($distance)) {
     return NULL;
   }
@@ -362,6 +372,7 @@ function _location_convert_distance_to_meters($distance, $distance_unit = 'km') 
  * @ingroup Location
  */
 function location_latlon_rough($location = array()) {
+  // @todo MVP port location_latlon_rough for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!isset($location['country']) || !isset($location['postal_code'])) {
     return NULL;
   }
@@ -396,6 +407,7 @@ function location_latlon_rough($location = array()) {
  *      'lon' => approximate longitude of the center of the postal code's area
  */
 function location_latlon_rough_default($location = array()) {
+  // @todo MVP port location_latlon_rough_default for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!isset($location['country']) || !isset($location['postal_code'])) {
     return NULL;
   }
@@ -449,6 +461,7 @@ function location_latlon_rough_default($location = array()) {
  *   An array with 'minlng', 'minlat', 'maxlng', and 'maxlat' elements.
  */
 function location_country_bounds($location = array()) {
+  // @todo MVP port location_country_bounds for https://github.com/drupal-ukraine/dmaps/pull/40
   if (!is_array($location)) {
     $location = array('country' => $location);
   }
@@ -500,6 +513,7 @@ function location_country_bounds($location = array()) {
  * @ingroup Location
  */
 function location_latlon_exact($location = array()) {
+  // @todo MVP port location_latlon_exact for https://github.com/drupal-ukraine/dmaps/pull/40
   $country = $location['country'];
   location_standardize_country_code($country);
   $service = variable_get('location_geocode_' . $country, 'none');
@@ -528,6 +542,7 @@ function location_latlon_exact($location = array()) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Returns an associative array of countries currently supported by the location system where.
  *
  * -> the keys represent the two-letter ISO code and
@@ -542,6 +557,7 @@ function location_latlon_exact($location = array()) {
  * @ingroup Location
  */
 function _location_supported_countries() {
+  // @todo MVP port _location_supported_countries for https://github.com/drupal-ukraine/dmaps/pull/40
   $supported_countries = & drupal_static(__FUNCTION__, array());
 
   // If this function has already been called this request, we can avoid a DB hit.
@@ -573,6 +589,7 @@ function _location_supported_countries() {
  * Fetch the provinces for a country.
  */
 function location_get_provinces($country = 'us') {
+  // @todo MVP port location_get_provinces for https://github.com/drupal-ukraine/dmaps/pull/40
   $provinces = & drupal_static(__FUNCTION__, array());
   // Current language.
   $lang_code = $GLOBALS['language']->language;
@@ -605,9 +622,11 @@ function location_get_provinces($country = 'us') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Get the translated name of a country code.
  */
 function location_country_name($country = 'us') {
+  // @todo MVP port location_country_name for https://github.com/drupal-ukraine/dmaps/pull/40
   location_standardize_country_code($country);
   $countries = location_get_iso3166_list();
   if (isset($countries[$country])) {
@@ -623,6 +642,7 @@ function location_country_name($country = 'us') {
  * Get the full name of a province code.
  */
 function location_province_name($country = 'us', $province = 'xx') {
+  // @todo MVP port location_province_name for https://github.com/drupal-ukraine/dmaps/pull/40
   $provinces = location_get_provinces($country);
   $province = strtoupper($province);
   if (isset($provinces[$province])) {
@@ -638,6 +658,7 @@ function location_province_name($country = 'us', $province = 'xx') {
  * Get a province code from a code or full name and a country.
  */
 function location_province_code($country = 'us', $province = 'xx') {
+  // @todo MVP port location_province_code for https://github.com/drupal-ukraine/dmaps/pull/40
   // An array of countries is useful if someone specified multiple countries
   // in an autoselect for example.
   // It *is* possibly ambiguous, especially if the province was already a code.
@@ -664,9 +685,11 @@ function location_province_code($country = 'us', $province = 'xx') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Canonicalize a country code.
  */
 function location_standardize_country_code(&$country) {
+  // @d8 location_standardize_country_code() -> \Drupal::service('dmaps.geocoder')->setStdCountryCode();
   $country = trim($country);
   // @@@ Double check the validity of this validity check. ;)
   if (!ctype_alpha($country) || strlen($country) != 2) {
@@ -682,6 +705,7 @@ function location_standardize_country_code(&$country) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * Load support for a country.
  *
  * This function will load support for a country identified by its two-letter ISO code.
@@ -693,6 +717,7 @@ function location_standardize_country_code(&$country) {
  *   TRUE if the file was found and loaded, FALSE otherwise.
  */
 function location_load_country($country) {
+  // @d8 location_load_country() -> \Drupal::service('dmaps.geocoder')->getCountry();
   location_standardize_country_code($country);
 
   $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'location') . '/supported/location.' . $country . '.inc';
@@ -710,6 +735,7 @@ function location_load_country($country) {
  * Load a general geocoding service.
  */
 function location_load_geocoder($geocoder) {
+  // @d8 location_load_geocoder() -> \Drupal::service('dmaps.geocoder')->initGeocoder();
   include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'location') . '/geocoding/' . $geocoder . '.inc';
 }
 
@@ -723,6 +749,7 @@ function location_load_geocoder($geocoder) {
  *   The single line address
  */
 function location_address2singleline($location = array()) {
+  // @d8 location_address2singleline() -> \Drupal::service('dmaps.geocoder')->getAddrSingleline();
   // Check if its a valid address.
   if (empty($location)) {
     return '';
@@ -774,6 +801,7 @@ function location_address2singleline($location = array()) {
  * Geocoder list.
  */
 function location_get_general_geocoder_list() {
+  // @d8 location_get_general_geocoder_list() -> \Drupal::service('dmaps.geocoder')->getAddrSingleline();
   $list = & drupal_static(__FUNCTION__, array());
 
   if (!count($list)) {
@@ -791,12 +819,14 @@ function location_get_general_geocoder_list() {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
  * The following is an array of all.
  *
  * countrycode => country-name pairs as layed out in
  * ISO 3166-1 alpha-2
  */
 function location_get_iso3166_list($upper = FALSE) {
+  // @d8 location_get_iso3166_list() -> \Drupal::service('dmaps.geocoder')->getIso3166List();
   include_once DRUPAL_ROOT . '/includes/locale.inc';
 
   // Statically cache a version of the core Drupal list of countries
