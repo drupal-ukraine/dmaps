@@ -174,9 +174,6 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
     $geocoders = \Drupal::service('dmaps.geocoder')->getGeocoders();
     $geocoders_in_use = [];
 
-    $minimum_accuracy = $form_state->getValue('location_geocode_google_minimum_accuracy');
-    $config->set('location_geocode_google_minimum_accuracy', $minimum_accuracy);
-
     $values = $form_state->getValues();
     foreach ($values['countries'] as $country) {
       $key = key($country);
