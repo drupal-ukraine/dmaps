@@ -8,6 +8,9 @@ namespace Drupal\dmaps\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\dmaps\DmapsGeocoder;
+use Drupal\dmaps\LocationCountriesManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -21,6 +24,7 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
    * @var mixed
    */
   protected $iso;
+
   /**
    * Geocoder provider name
    *
@@ -29,15 +33,36 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
   protected $service;
 
   /**
+   * The dmaps LocationCountriesManager service
+   *
+   * @var \Drupal\dmaps\LocationCountriesManager
+   */
+  protected $countryManager;
+
+  /**
+   * The dmaps DmapsGeocoder service.
+   *
+   * @var \Drupal\dmaps\DmapsGeocoder
+   */
+  protected $geocoderManager;
+
+  /**
    * DmapsGeocoderOptionsForm constructor.
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *    The configuration factory.
+   * @param \Drupal\dmaps\DmapsGeocoder $geocoder_manager
+   *    The dmaps Geocoder service.
+   * @param \Drupal\dmaps\LocationCountriesManager $country_manager
+   *    The dmaps country manager service.
    */
-  public function __construct(\Drupal\Core\Config\ConfigFactoryInterface $config_factory) {
+  public function __construct(ConfigFactoryInterface $config_factory, DmapsGeocoder $geocoder_manager, LocationCountriesManager $country_manager) {
+    parent::__construct($config_factory);
     $request = $this->getRequest();
     $this->iso = $request->attributes->get('iso');
     $this->service = $request->attributes->get('service');
-
-    parent::__construct($config_factory);
+    $this->configFactory = $config_factory;
+    $this->countryManager = $country_manager;
+    $this->geocoderManager = $geocoder_manager;
   }
 
   /**
@@ -58,10 +83,9 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
    * @inheritdoc
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config_name = 'dmaps.geocoder.' . $this->service . '_' . $this->iso;
-    $config = \Drupal::configFactory()->getEditable($config_name);
-    $country_manager = \Drupal::service('dmaps.location_countries_manager');
-    $country_manager->locationLoadCountry($this->iso);
+    $config_name = $this->getConfigName();
+    $config = $this->configFactory->getEditable($config_name);
+    $this->countryManager->locationLoadCountry($this->iso);
 
     // @todo Need to refactor when geocoder plugins will be implemented
     $geocode_settings_form_function_specific = 'location_geocode_' . $this->iso . '_' . $this->service . '_settings';
@@ -71,8 +95,7 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
       parent::buildForm($form, $form_state);
     }
 
-    $geocoder = \Drupal::service('dmaps.geocoder');
-    $geocoder->initGeocoder($this->service);
+    $this->geocoderManager->initGeocoder($this->service);
 
     if (function_exists($geocode_settings_form_function_general)) {
       $form = $geocode_settings_form_function_general($this->iso, $config);
@@ -101,8 +124,8 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
    * @inheritdoc
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config_name = 'dmaps.geocoder.' . $this->service . '_' . $this->iso;
-    $config = \Drupal::configFactory()->getEditable($config_name);
+    $config_name = $this->getConfigName();
+    $config = $this->configFactory->getEditable($config_name);
     $values = $form_state->getValues();
     $exclude = ['submit', 'op', 'form_build_id', 'form_token', 'form_id'];
     foreach ($values as $key => $value) {
@@ -118,7 +141,20 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('config.factory'));
+    return new static(
+      $container->get('config.factory'),
+      $container->get('dmaps.geocoder'),
+      $container->get('dmaps.location_countries_manager')
+    );
+  }
+
+  /**
+   * Build config name string from geocoder service name and country iso.
+   *
+   * @return string
+   */
+  protected function getConfigName() {
+    return 'dmaps.geocoder.' . $this->service . '_' . $this->iso;
   }
 
 }
