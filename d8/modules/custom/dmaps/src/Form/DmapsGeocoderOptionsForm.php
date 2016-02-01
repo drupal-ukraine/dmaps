@@ -47,7 +47,8 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
   protected $geocoderManager;
 
   /**
-   * DmapsGeocoderOptionsForm constructor.
+   * Constructs a new DmapsGeocoderOptionsForm object.
+   *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *    The configuration factory.
    * @param \Drupal\dmaps\DmapsGeocoder $geocoder_manager
