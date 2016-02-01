@@ -15,7 +15,7 @@ dmaps.location.util:
     _permission: 'administer site configuration'
 
 dmaps.locations.geocoding_options:
-  path: 'admin/config/content/location/geocoding'
+  path: '/admin/config/content/location/geocoding'
   defaults:
     _form: '\Drupal\dmaps\Form\DmapsGeocodingOptionsForm'
     _title: 'Geocoding options'
@@ -23,7 +23,7 @@ dmaps.locations.geocoding_options:
     _permission: 'administer site configuration'
 
 dmaps.locations.geocoder_options:
-  path: 'admin/config/content/location/geocoding/{iso}/{service}'
+  path: '/admin/config/content/location/geocoding/{iso}/{service}'
   defaults:
     _form: '\Drupal\dmaps\Form\DmapsGeocoderOptionsForm'
     _title: 'Geocoder options'

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Contains \Drupal\dmaps\Form\DmapsGeocoderOptionsForm
  */
@@ -7,9 +8,13 @@ namespace Drupal\dmaps\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
-
+/**
+ * Provides form for managing specific geocoder settings.
+ */
 class DmapsGeocoderOptionsForm extends ConfigFormBase {
+
   /**
    * Country iso
    *
@@ -23,18 +28,28 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
    */
   protected $service;
 
+  /**
+   * DmapsGeocoderOptionsForm constructor.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   */
   public function __construct(\Drupal\Core\Config\ConfigFactoryInterface $config_factory) {
-    $request = \Drupal::request();
+    $request = $this->getRequest();
     $this->iso = $request->attributes->get('iso');
     $this->service = $request->attributes->get('service');
 
     parent::__construct($config_factory);
   }
 
+  /**
+   * @inheritdoc
+   */
   public function getFormId() {
     return 'dmaps_geocoder_options';
   }
 
+  /**
+   * @inheritdoc
+   */
   public function getEditableConfigNames() {
     return ['dmaps.geocoder_' . $this->iso . '_' . $this->service . '_settings'];
   }
@@ -97,6 +112,13 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
     }
     $config->save();
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('config.factory'));
   }
 
 }
