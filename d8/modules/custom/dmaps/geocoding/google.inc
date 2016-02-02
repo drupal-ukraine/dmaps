@@ -253,7 +253,7 @@ function _google_geocode_get_components($location = array()) {
  * @todo 8.x-2.x Move to Google geocoder plugin
  */
 function dmaps_google_geocode_accuracy_codes() {
-  return array(
+  return [
     0 => t('Unknown location'),
     1 => t('Country level accuracy'),
     2 => t('Region (state, province, prefecture, etc.) level accuracy'),
@@ -264,5 +264,5 @@ function dmaps_google_geocode_accuracy_codes() {
     7 => t('Intersection level accuracy'),
     8 => t('Address level accuracy'),
     9 => t('Premise (building name, property name, shopping center, etc.) level accuracy'),
-  );
+  ];
 }

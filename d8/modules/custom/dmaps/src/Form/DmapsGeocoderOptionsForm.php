@@ -67,6 +67,17 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('dmaps.geocoder'),
+      $container->get('dmaps.location_countries_manager')
+    );
+  }
+
+  /**
    * @inheritdoc
    */
   public function getFormId() {
@@ -136,17 +147,6 @@ class DmapsGeocoderOptionsForm extends ConfigFormBase {
     }
     $config->save();
     parent::submitForm($form, $form_state);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('config.factory'),
-      $container->get('dmaps.geocoder'),
-      $container->get('dmaps.location_countries_manager')
-    );
   }
 
   /**
