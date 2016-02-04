@@ -12,4 +12,7 @@ services:
     class: Drupal\dmaps\EarthGeographicalDistances
   dmaps.geocoder:
     class: Drupal\dmaps\DmapsGeocoder
-
+  dmaps.admin_geocoder_breadcrumbs:
+    class: Drupal\dmaps\Breadcrumb\AdminPagesGeocoderBreadcrumbBuilder
+    tags:
+      - { name: breadcrumb_builder, priority: 100 }

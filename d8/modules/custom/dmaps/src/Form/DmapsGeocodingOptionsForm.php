@@ -9,6 +9,7 @@ namespace Drupal\dmaps\Form;
 
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 
 class DmapsGeocodingOptionsForm extends ConfigFormBase {
 
@@ -34,14 +35,6 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
     $config = $this->config('dmaps.geocoding_settings');
     $geocoder = \Drupal::service('dmaps.geocoder');
     $country_manager = \Drupal::service('dmaps.location_countries_manager');
-
-    $form['location_geocode_google_minimum_accuracy'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Google Maps geocoding minimum accuracy'),
-      '#options' => dmaps_google_geocode_accuracy_codes(),
-      '#default_value' => $config->get('location_geocode_google_minimum_accuracy'),
-      '#description' => $this->t('The Google Maps geocoding API returns results with a given accuracy. Any responses below this minimum accuracy will be ignored. See a !accuracy_values_link.', ['!accuracy_values_link' => '<a href="http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy">' . t('description of these values') . '</a>']),
-    ];
 
     $form['countries'] = [
       '#type' => 'table',
@@ -145,18 +138,24 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
           $form['countries'][$country_iso][$config_link_key] = [
             '#type' => 'link',
             '#title' => $this->t('Configure parameters'),
-            '#href' => 'admin/config/content/location/geocoding/' . $country_iso . '/' . $current_val_chopped,
+            '#url' => Url::fromRoute('dmaps.locations.geocoder_options', [
+              'iso' => $country_iso,
+              'service' => $current_val_chopped,
+            ])->toString(),
           ];
         }
         elseif (function_exists($geocode_settings_form_function_general)) {
           $form['countries'][$country_iso][$config_link_key] = [
             '#type' => 'link',
             '#title' => $this->t('Configure parameters'),
-            '#href' => 'admin/config/content/location/geocoding/' . $country_iso . '/' . $current_value,
+            '#url' => Url::fromRoute('dmaps.locations.geocoder_options', [
+              'iso' => $country_iso,
+              'service' => $current_value,
+            ])->toString(),
           ];
         }
         else {
-          $form['countries'][$country_iso]['location_geocode_config_link_' . $country_iso] = [
+          $form['countries'][$country_iso][$config_link_key] = [
             '#type' => 'markup',
             '#markup' => $this->t('No configuration necessary for selected service.'),
           ];
@@ -172,25 +171,22 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->config('dmaps.geocoding_settings');
-    $general_geocoders = \Drupal::service('dmaps.geocoder')->getGeocoders();
-    $general_geocoders_in_use = [];
-
-    $minimum_accuracy = $form_state->getValue('location_geocode_google_minimum_accuracy');
-    $config->set('location_geocode_google_minimum_accuracy', $minimum_accuracy);
+    $geocoders = \Drupal::service('dmaps.geocoder')->getGeocoders();
+    $geocoders_in_use = [];
 
     $values = $form_state->getValues();
     foreach ($values['countries'] as $country) {
       $key = key($country);
       $value = $country[$key];
-      if (in_array($value, $general_geocoders)) {
-        $general_geocoders_in_use[$value] = $value;
+      if (in_array($value, $geocoders)) {
+        $geocoders_in_use[$value] = $value;
         $config->set($key, $country[$key]);
       }
     }
     $config->save();
 
     \Drupal::state()
-      ->set('location_general_geocoders_in_use', $general_geocoders_in_use);
+      ->set('location_general_geocoders_in_use', $geocoders_in_use);
 
     parent::submitForm($form, $form_state);
   }
