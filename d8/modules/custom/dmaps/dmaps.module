@@ -40,3 +40,21 @@ function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route
       return $output;
   }
 }
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function dmaps_entity_extra_field_info() {
+  $info = array();
+  foreach (node_type_get_types() as $bundle) {
+    if (!isset($info['node'][$bundle->id()]['form']['locations'])) {
+      $info['node'][$bundle->id()]['form']['dmaps'] = array(
+        'label' => t('Location'),
+        'description' => t('Dmaps module form elements'),
+        'weight' => 30,
+      );
+    }
+  }
+
+  return $info;
+}
