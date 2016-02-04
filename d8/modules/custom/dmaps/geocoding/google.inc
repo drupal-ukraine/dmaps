@@ -120,46 +120,40 @@ function google_geocode_location($location = array()) {
 /**
  * General settings for this geocoder.
  */
-function google_geocode_settings() {
-  $form = array();
-
-  $form['location_geocode_google_apikey'] = array(
+function google_geocode_settings($country, &$config) {
+  $form = [];
+  // @todo Refactor when
+  $form['location_geocode_google_apikey'] = [
     '#type' => 'textfield',
     '#title' => t('Google Geocoding API Server Key'),
     '#size' => 64,
     '#maxlength' => 128,
-    '#default_value' => variable_get('location_geocode_google_apikey', ''),
-    '#description' => t(
-      'In order to use the Google Geocoding API web-service, you will need a Google Geocoding API Server Key.  You can obtain one at the !sign_up_link for the !google_maps_api.  Without a key daily requests from a single IP address will be automaticaly limited.  If you do not enter a key here this module will use the Google Maps API Key from gmap if one is present. NOTE: You will <em>not</em> have to re-enter your API key for each country for which you have selected Google Maps for geocoding.  This setting is global.',
-      array(
+    '#default_value' => $config->get('location_geocode_google_apikey'),
+    '#description' => t('In order to use the Google Geocoding API web-service, you will need a Google Geocoding API Server Key.  You can obtain one at the !sign_up_link for the !google_maps_api.  Without a key daily requests from a single IP address will be automaticaly limited.  If you do not enter a key here this module will use the Google Maps API Key from gmap if one is present. NOTE: You will <em>not</em> have to re-enter your API key for each country for which you have selected Google Maps for geocoding.  This setting is global.',
+      [
         '!sign_up_link' => '<a href="http://console.developers.google.com/">sign-up page</a>',
         '!google_maps_api' => '<a href="http://developers.google.com/maps/documentation/geocoding/">Google Geocoding API</a>',
-      )
+      ]
     ),
-  );
+  ];
 
-  $form['location_geocode_google_delay'] = array(
+  $form['location_geocode_google_delay'] = [
     '#type' => 'textfield',
     '#title' => t('Delay between geocoding requests (is milliseconds)'),
-    '#description' => t(
-      'To avoid a 620 error (denial of service) from Google, you can add a delay between geocoding requests. 200ms is recommended.'
-    ),
-    '#default_value' => variable_get('location_geocode_google_delay', 0),
+    '#description' => t('To avoid a 620 error (denial of service) from Google, you can add a delay between geocoding requests. 200ms is recommended.'),
+    '#default_value' => $config->get('location_geocode_google_delay') ? $config->get('location_geocode_google_delay') : 0,
     '#size' => 10,
-  );
+  ];
 
-  $country = arg(5);
   if ($country) {
-    $form['location_geocode_' . $country . '_google_accuracy_code'] = array(
+    $accuracy_code = $config->get('location_geocode_' . $country . '_google_accuracy_code');
+    $form['location_geocode_' . $country . '_google_accuracy_code'] = [
       '#type' => 'select',
       '#title' => t('Google Maps Geocoding Accuracy for %country', array('%country' => $country)),
-      '#default_value' => variable_get(
-        'location_geocode_' . $country . '_google_accuracy_code',
-        variable_get('location_geocode_google_minimum_accuracy', '3')
-      ),
-      '#options' => location_google_geocode_accuracy_codes(),
+      '#default_value' => $accuracy_code ? $accuracy_code : 3,
+      '#options' => dmaps_google_geocode_accuracy_codes(),
       '#description' => t('The minimum required accuracy for the geolocation data to be saved.'),
-    );
+    ];
   }
 
   return $form;
@@ -250,4 +244,25 @@ function _google_geocode_get_components($location = array()) {
   }
 
   return implode('|', $components);
+}
+
+/**
+ * Returns a list of accuracy codes as defined by the Google Maps API.
+ *
+ * @see http://code.google.com/apis/maps/documentation/reference.html#GGeoAddressAccuracy
+ * @todo 8.x-2.x Move to Google geocoder plugin
+ */
+function dmaps_google_geocode_accuracy_codes() {
+  return [
+    0 => t('Unknown location'),
+    1 => t('Country level accuracy'),
+    2 => t('Region (state, province, prefecture, etc.) level accuracy'),
+    3 => t('Sub-region (county, municipality, etc.) level accuracy'),
+    4 => t('Town (city, village) level accuracy'),
+    5 => t('Post code (zip code) level accuracy'),
+    6 => t('Street level accuracy'),
+    7 => t('Intersection level accuracy'),
+    8 => t('Address level accuracy'),
+    9 => t('Premise (building name, property name, shopping center, etc.) level accuracy'),
+  ];
 }
