@@ -5,6 +5,7 @@
  */
 
 use \Drupal\Core\Url;
+use \Drupal\node\Entity\NodeType;
 
 /**
  * Implements hook_help().
@@ -39,4 +40,20 @@ function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route
 
       return $output;
   }
+}
+
+/**
+ * Implements hook_entity_extra_field_info().
+ */
+function dmaps_entity_extra_field_info() {
+  $extra = [];
+  foreach (NodeType::loadMultiple() as $bundle) {
+    $extra['node'][$bundle->id()]['form']['dmaps'] = [
+      'label' => t('Location'),
+      'description' => t('Dmaps module form elements'),
+      'weight' => 30,
+    ];
+  }
+
+  return $extra;
 }
