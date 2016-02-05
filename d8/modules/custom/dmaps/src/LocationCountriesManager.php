@@ -165,8 +165,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
    *   TRUE if the file was found and loaded, FALSE otherwise.
    */
   public function getCountry($country) {
-    // Implements location_load_country().
-    $this->setStdCountryCode($country);
+    static::locationStandardizeCountryCode($country);
 
     // @todo 8.x-2.x - convert to country plugins. Or even configs.
     $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/files/supported_countries/location.' . $country . '.inc';

@@ -37,9 +37,9 @@ dmaps.geocoding_settings.*:
   type: config_object
   label: 'Geocoding settings'
   mapping:
-    location_general_geocoders_in_use:
-      type: integer
-      label: 'General geocoders in use'
+    geocoder:
+      type: string
+      label: 'Geocoding settings'
 
 dmaps.geocoder.*:
   type: config_object
