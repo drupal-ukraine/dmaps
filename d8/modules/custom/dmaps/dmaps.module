@@ -48,13 +48,11 @@ function dmaps_help($route_name, \Drupal\Core\Routing\RouteMatchInterface $route
 function dmaps_entity_extra_field_info() {
   $extra = [];
   foreach (NodeType::loadMultiple() as $bundle) {
-    if (!isset($info['node'][$bundle->id()]['form']['locations'])) {
-      $extra['node'][$bundle->id()]['form']['dmaps'] = array(
-        'label' => t('Location'),
-        'description' => t('Dmaps module form elements'),
-        'weight' => 30,
-      );
-    }
+    $extra['node'][$bundle->id()]['form']['dmaps'] = [
+      'label' => t('Location'),
+      'description' => t('Dmaps module form elements'),
+      'weight' => 30,
+    ];
   }
 
   return $extra;
