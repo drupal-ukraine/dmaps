@@ -185,6 +185,8 @@ function location_element_info() {
 }
 
 /**
+ * PORTED to Dmaps 8.x-1.x - dmaps_entity_extra_field_info();
+ *
  * Implements hook_field_extra_fields().
  */
 function location_field_extra_fields() {
