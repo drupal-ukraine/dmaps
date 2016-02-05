@@ -22,6 +22,8 @@ define('LOCATION_USER_COLLECT', 1);
 include_once DRUPAL_ROOT . '/' . LOCATION_PATH . '/location.inc';
 
 /**
+ * partially PORTED to Dmaps 8.x-1.x: dmaps.routing.yml
+ *
  * Implements hook_menu().
  */
 function location_menu() {
@@ -98,7 +100,7 @@ function location_api_variant() {
 }
 
 /**
- * PORTED to Dmaps 8.x-1.x
+ * PORTED to Dmaps 8.x-1.x: dmaps.permissions.yml
  *
  * Implements hook_permission().
  */

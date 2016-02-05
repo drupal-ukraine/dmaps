@@ -686,10 +686,11 @@ function location_province_code($country = 'us', $province = 'xx') {
 // @@@ New in 3.x, document.
 /**
  * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * \Drupal::service('dmaps.geocoder')->setStdCountryCode();
+ *
  * Canonicalize a country code.
  */
 function location_standardize_country_code(&$country) {
-  // @d8 location_standardize_country_code() -> \Drupal::service('dmaps.geocoder')->setStdCountryCode();
   $country = trim($country);
   // @@@ Double check the validity of this validity check. ;)
   if (!ctype_alpha($country) || strlen($country) != 2) {
@@ -706,6 +707,8 @@ function location_standardize_country_code(&$country) {
 
 /**
  * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * \Drupal::service('dmaps.geocoder')->getCountry();
+ *
  * Load support for a country.
  *
  * This function will load support for a country identified by its two-letter ISO code.
@@ -717,7 +720,6 @@ function location_standardize_country_code(&$country) {
  *   TRUE if the file was found and loaded, FALSE otherwise.
  */
 function location_load_country($country) {
-  // @d8 location_load_country() -> \Drupal::service('dmaps.geocoder')->getCountry();
   location_standardize_country_code($country);
 
   $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'location') . '/supported/location.' . $country . '.inc';
@@ -732,14 +734,17 @@ function location_load_country($country) {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal::service('dmaps.geocoder')->initGeocoder();
+ *
  * Load a general geocoding service.
  */
 function location_load_geocoder($geocoder) {
-  // @d8 location_load_geocoder() -> \Drupal::service('dmaps.geocoder')->initGeocoder();
   include_once DRUPAL_ROOT . '/' . drupal_get_path('module', 'location') . '/geocoding/' . $geocoder . '.inc';
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal::service('dmaps.geocoder')->getAddrSingleline();
+ *
  * Create a single line address.
  *
  * @param array $location
@@ -749,7 +754,6 @@ function location_load_geocoder($geocoder) {
  *   The single line address
  */
 function location_address2singleline($location = array()) {
-  // @d8 location_address2singleline() -> \Drupal::service('dmaps.geocoder')->getAddrSingleline();
   // Check if its a valid address.
   if (empty($location)) {
     return '';
@@ -798,10 +802,11 @@ function location_address2singleline($location = array()) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal::service('dmaps.geocoder')->getGeocoders();
+ *
  * Geocoder list.
  */
 function location_get_general_geocoder_list() {
-  // @d8 location_get_general_geocoder_list() -> \Drupal::service('dmaps.geocoder')->getAddrSingleline();
   $list = & drupal_static(__FUNCTION__, array());
 
   if (!count($list)) {
@@ -820,13 +825,14 @@ function location_get_general_geocoder_list() {
 
 /**
  * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * location_get_iso3166_list() -> \Drupal::service('dmaps.geocoder')->getIso3166List();
+ *
  * The following is an array of all.
  *
  * countrycode => country-name pairs as layed out in
  * ISO 3166-1 alpha-2
  */
 function location_get_iso3166_list($upper = FALSE) {
-  // @d8 location_get_iso3166_list() -> \Drupal::service('dmaps.geocoder')->getIso3166List();
   include_once DRUPAL_ROOT . '/includes/locale.inc';
 
   // Statically cache a version of the core Drupal list of countries
