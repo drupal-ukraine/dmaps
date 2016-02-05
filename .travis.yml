@@ -30,7 +30,7 @@ before_script:
     - composer global require drush/drush:dev-master
     - phpenv rehash
     - sudo ln -s /home/travis/.composer/vendor/bin/drush /usr/bin/drush
-    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS dmaps_test;create database IF NOT EXISTS dmaps_test;'; fi"
+#    - sh -c "if [ '$DB' = 'mysql' ]; then mysql -e 'create database IF NOT EXISTS dmaps_test;create database IF NOT EXISTS dmaps_test;'; fi"
     # Installing Drupal Console
     - php -r "readfile('https://drupalconsole.com/installer');" > drupal.phar
     - sudo mv drupal.phar /usr/local/bin/drupal
@@ -40,7 +40,7 @@ script:
     - drush --version
     - ls -la
     - cd d8
-    - ansible-playbook reinstall.yml -i 'localhost,' --connection=local --extra-vars="mysql_db=dmaps_test mysql_user=root mysql_pass="
+    - ansible-playbook reinstall.yml -i 'localhost,' --connection=local
     - drush status
     - drush en -y simpletest
     - drupal -vvv test:run "\Drupal\dmaps\Tests\Form\MainSettingsFormTest" --url http://drupal8.192.168.56.132.xip.io
