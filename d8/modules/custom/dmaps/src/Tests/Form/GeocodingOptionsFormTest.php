@@ -44,26 +44,14 @@ class GeocodingOptionsFormTest extends WebTestBase {
    * Testing Geocoding Options form for Dmaps module.
    *
    * @throws \Exception
+   *   Exceptions if tests failed.
    */
   function testFormPage() {
     $this->drupalGet('/admin/config/content/location/geocoding');
     $edit = ['countries[af][geocode_af]' => 'google'];
     $this->drupalPostForm('/admin/config/content/location/geocoding', $edit, t('Save configuration'));
     $this->assertText(t('The configuration options have been saved.'));
-
-//    $this->assertLink(t('Configure parameters'));
-//    $this->drupalGet('/admin/config/content/location/geocoding/af/google');
-//    $this->assertFieldByName('location_geocode_google_apikey', NULL, t('Google Geocoding API Server Key'));
-//    $this->assertFieldByName('location_geocode_google_delay', NULL, t('Delay between geocoding requests (is milliseconds)'));
-//    $this->assertFieldByName('location_geocode_af_google_accuracy_code', 3, t('Google Maps Geocoding Accuracy for af'));
-//    $edit = [
-//      'location_geocode_google_apikey' => $this->randomMachineName(),
-//      'location_geocode_google_delay' => 500,
-//      'location_geocode_af_google_accuracy_code' => 3,
-//    ];
-//    $this->drupalPostForm('/admin/config/content/location/geocoding/af/google', $edit, t('Save configuration'));
-//    $this->assertText(t('The configuration options have been saved.'));
+    $this->assertLink(t('Configure parameters'));
   }
-
 
 }
