@@ -637,10 +637,10 @@ function location_country_name($country = 'us') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager::locationProvinceName()
  * Get the full name of a province code.
  */
 function location_province_name($country = 'us', $province = 'xx') {
-  // @todo MVP port location_province_name for https://github.com/drupal-ukraine/dmaps/pull/40
   $provinces = location_get_provinces($country);
   $province = strtoupper($province);
   if (isset($provinces[$province])) {

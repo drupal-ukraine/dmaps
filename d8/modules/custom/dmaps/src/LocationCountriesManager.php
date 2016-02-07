@@ -152,4 +152,33 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
 
     return '';
   }
+
+  public static function locationGetProvinces($country = 'us') {
+
+  }
+
+  /**
+   * Get the full name of a province code.
+   *
+   * @param string $country
+   *   Two-letter ISO code for country.
+   * @param string $province
+   *   Province two-letter code.
+   *
+   * @return string
+   */
+  public static function locationProvinceName($country = 'us', $province = 'xx') {
+    $provinces = static::locationGetProvinces($country);
+    $province = strtoupper($province);
+    if (isset($provinces[$province])) {
+      return $provinces[$province];
+    }
+
+    return '';
+  }
+
+  public static function locationProvinceCode($country = 'us', $province = 'xx') {
+
+  }
+
 }
