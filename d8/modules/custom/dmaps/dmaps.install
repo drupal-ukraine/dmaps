@@ -12,3 +12,221 @@ function dmaps_uninstall() {
   // Remove cache table.
   \Drupal::cache('dmaps')->removeBin();
 }
+
+/**
+ * Implements hook_schema().
+ */
+function dmaps_schema() {
+  $schema = [];
+  $schema['dmaps_location'] = array(
+    'description' => 'Locational data managed by dmaps module.',
+    'fields' => array(
+      'lid' => array(
+        'description' => 'Primary Key: Unique location ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Place Name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'street' => array(
+        'description' => 'Street address, line 1.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'additional' => array(
+        'description' => 'Street address, line 2.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'city' => array(
+        'description' => 'City.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'province' => array(
+        'description' => 'State / Province code.',
+        'type' => 'varchar',
+        'length' => 16,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'postal_code' => array(
+        'description' => 'Postal / ZIP code.',
+        'type' => 'varchar',
+        'length' => 16,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+      'country' => array(
+        'description' => 'Two letter ISO country code.',
+        'type' => 'char',
+        'length' => 2,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'latitude' => array(
+        'description' => 'Location latitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      'longitude' => array(
+        'description' => 'Location longitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      'source' => array(
+        'description' => 'Source of the latitude and longitude data (Geocoder, user entered, invalid, etc.)',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('lid'),
+  );
+
+  $schema['dmaps_location_instance'] = array(
+    'description' => 'N:M join table to join locations to other tables.',
+    'fields' => array(
+      'nid' => array(
+        'description' => 'Reference to {node}.nid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'vid' => array(
+        'description' => 'Reference to {node_revision}.vid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'uid' => array(
+        'description' => 'Reference to {users}.uid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'genid' => array(
+        'description' => 'Generic reference key.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'lid' => array(
+        'description' => 'Reference to {location}.lid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'indexes' => array(
+      'nid' => array('nid'),
+      'vid' => array('vid'),
+      'uid' => array('uid'),
+      'genid' => array('genid'),
+      'lid' => array('lid'),
+    ),
+  );
+
+  $schema['dmaps_location_country'] = array(
+    'description' => 'Country data managed by the Dmaps module.',
+    'fields' => array(
+      'code' => array(
+        'description' => 'Primary Key: Two letter ISO Country Code',
+        'type' => 'char',
+        'length' => 2,
+        'not null' => TRUE,
+      ),
+      'name' => array(
+        'description' => 'Full Country Name ',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('code'),
+  );
+
+  $schema['dmaps_location_zipcodes'] = array(
+    'description' => 'Table for storing location zipcodes for the Dmaps module.',
+    'fields' => array(
+      'zip' => array(
+        'description' => 'Postal / ZIP code.',
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => '0',
+      ),
+      'city' => array(
+        'description' => 'City.',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'state' => array(
+        'description' => 'Province / State.',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'latitude' => array(
+        'description' => 'Location latitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      'longitude' => array(
+        'description' => 'Location longitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ),
+      'country' => array(
+        'description' => 'Two letter ISO country code.',
+        'type' => 'char',
+        'length' => 2,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('zip', 'country'),
+    'indexes' => array(
+      'zip' => array('zip'),
+      'latitude' => array('latitude'),
+      'longitude' => array('longitude'),
+      'country' => array('country'),
+    ),
+  );
+
+  return $schema;
+}
