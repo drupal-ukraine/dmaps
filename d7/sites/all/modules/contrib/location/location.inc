@@ -542,7 +542,7 @@ function location_latlon_exact($location = array()) {
 }
 
 /**
- * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager->getSupportedList()
  * Returns an associative array of countries currently supported by the location system where.
  *
  * -> the keys represent the two-letter ISO code and
@@ -557,7 +557,6 @@ function location_latlon_exact($location = array()) {
  * @ingroup Location
  */
 function _location_supported_countries() {
-  // @todo MVP port _location_supported_countries for https://github.com/drupal-ukraine/dmaps/pull/40
   $supported_countries = & drupal_static(__FUNCTION__, array());
 
   // If this function has already been called this request, we can avoid a DB hit.
@@ -622,11 +621,10 @@ function location_get_provinces($country = 'us') {
 
 // @@@ New in 3.x, document.
 /**
- * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager::locationCountryName()
  * Get the translated name of a country code.
  */
 function location_country_name($country = 'us') {
-  // @todo MVP port location_country_name for https://github.com/drupal-ukraine/dmaps/pull/40
   location_standardize_country_code($country);
   $countries = location_get_iso3166_list();
   if (isset($countries[$country])) {
@@ -685,11 +683,10 @@ function location_province_code($country = 'us', $province = 'xx') {
 
 // @@@ New in 3.x, document.
 /**
- * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager::locationStandardizeCountryCode()
  * Canonicalize a country code.
  */
 function location_standardize_country_code(&$country) {
-  // @d8 location_standardize_country_code() -> \Drupal::service('dmaps.geocoder')->setStdCountryCode();
   $country = trim($country);
   // @@@ Double check the validity of this validity check. ;)
   if (!ctype_alpha($country) || strlen($country) != 2) {
@@ -705,7 +702,7 @@ function location_standardize_country_code(&$country) {
 }
 
 /**
- * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager->locationLoadCountry()
  * Load support for a country.
  *
  * This function will load support for a country identified by its two-letter ISO code.
@@ -717,7 +714,6 @@ function location_standardize_country_code(&$country) {
  *   TRUE if the file was found and loaded, FALSE otherwise.
  */
 function location_load_country($country) {
-  // @d8 location_load_country() -> \Drupal::service('dmaps.geocoder')->getCountry();
   location_standardize_country_code($country);
 
   $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'location') . '/supported/location.' . $country . '.inc';
@@ -819,7 +815,7 @@ function location_get_general_geocoder_list() {
 }
 
 /**
- * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager::getIso3166List()
  * The following is an array of all.
  *
  * countrycode => country-name pairs as layed out in
