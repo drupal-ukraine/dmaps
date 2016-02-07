@@ -6,6 +6,7 @@
  */
 
 /**
+ * PORTED to 8.x-1.x into hook_uninstall().
  * Implements of hook_uninstall().
  */
 function location_uninstall() {
@@ -29,6 +30,7 @@ function location_uninstall() {
 }
 
 /**
+ * PORTED to 8.x-1.x into hook_schema().
  * Implements of hook_schema().
  */
 function location_schema() {
