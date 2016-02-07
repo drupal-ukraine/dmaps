@@ -101,6 +101,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
   public static function locationLoadCountry($country) {
     static::locationStandardizeCountryCode($country);
 
+    // @todo 8.x-2.x - convert to country plugins. Or even configs.
     $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/files/supported_countries/location.' . $country . '.inc';
     if (file_exists($file)) {
       include_once $file;
@@ -112,12 +113,13 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
   }
 
   /**
-   * Canonicalize a country code.
+   * Make country code canonical.
    *
    * @param string $country
-   *   Two-letter ISO code for country.
+   *   Country code.
    *
    * @return bool
+   *   False if wrong, TRUE if ok.
    */
   public static function locationStandardizeCountryCode(&$country) {
     $country = trim($country);
@@ -127,11 +129,9 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
 
       return FALSE;
     }
-    else {
-      $country = strtolower($country);
+    $country = strtolower($country);
 
-      return TRUE;
-    }
+    return TRUE;
   }
 
   /**
@@ -142,7 +142,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
    *
    * @return string
    */
-  public function locationCountryName($country = 'us') {
+  public static function locationCountryName($country = 'us') {
     static::locationStandardizeCountryCode($country);
     $countries = static::getIso3166List();
     if (isset($countries[$country])) {
@@ -151,31 +151,5 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
     }
 
     return '';
-  }
-
-  /**
-   * Load support for a country.
-   *
-   * This function will load support for a country identified by its two-letter ISO code.
-   *
-   * @param string $country
-   *   Two-letter ISO code for country.
-   *
-   * @return bool
-   *   TRUE if the file was found and loaded, FALSE otherwise.
-   */
-  public function getCountry($country) {
-    // Implements location_load_country().
-    $this->setStdCountryCode($country);
-
-    // @todo 8.x-2.x - convert to country plugins. Or even configs.
-    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/files/supported_countries/location.' . $country . '.inc';
-    if (file_exists($file)) {
-      include_once $file;
-
-      return TRUE;
-    }
-
-    return FALSE;
   }
 }
