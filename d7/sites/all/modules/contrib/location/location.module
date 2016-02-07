@@ -264,7 +264,7 @@ function location_theme() {
 }
 
 /**
- * // @todo Removed in 8.x
+ * // PORTED: Removed in 8.x
  * Implements hook_views_api().
  */
 function location_views_api() {
