@@ -187,7 +187,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
       'dmaps_location_provinces',
       'dmaps_location_provinces_' . $country,
     ];
-    \Drupal::moduleHandler()->alter($alter_hooks, $provinces, $country);
+    \Drupal::moduleHandler()->alter($alter_hooks, $provinces[$country], $country);
 
     return isset($provinces[$country]) ? $provinces[$country] : [];
   }
