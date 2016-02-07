@@ -102,29 +102,6 @@ class DmapsGeocoder {
   }
 
   /**
-   * Make country code canonical.
-   *
-   * @param string $country
-   *   Country code.
-   *
-   * @return bool
-   *   False if wrong, TRUE if ok.
-   */
-  public function setStdCountryCode(&$country) {
-    // Implements location_standardize_country_code().
-    $country = trim($country);
-    // @todo 8.x-1.x Double check the validity of this validity check. ;)
-    if (!ctype_alpha($country) || strlen($country) != 2) {
-      $country = 'xx';
-
-      return FALSE;
-    }
-    $country = strtolower($country);
-
-    return TRUE;
-  }
-
-  /**
    * Load a general geocoding service.
    */
   public function initGeocoder($geocoder) {
