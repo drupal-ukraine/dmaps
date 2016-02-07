@@ -177,8 +177,40 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
     return '';
   }
 
+  /**
+   * Get a province code from a code or full name and a country.
+   *
+   * @param string $country
+   *   Two-letter ISO code for country.
+   * @param string $province
+   *   Province two-letter code.
+   *
+   * @return string
+   */
   public static function locationProvinceCode($country = 'us', $province = 'xx') {
+    // An array of countries is useful if someone specified multiple countries
+    // in an autoselect for example.
+    // It *is* possibly ambiguous, especially if the province was already a code.
+    // We make an array here for single (the usual case) for code simplicity reasons.
+    if (!is_array($country)) {
+      $country = [$country];
+    }
+    $p = strtoupper($province);
+    foreach ($country as $c) {
+      if ($c == 'xx') {
 
+        return $province;
+      }
+      $provinces = static::locationGetProvinces($c);
+      foreach ($provinces as $k => $v) {
+        if ($p == strtoupper($k) || $p == strtoupper($v)) {
+
+          return $k;
+        }
+      }
+    }
+
+    return '';
   }
 
 }

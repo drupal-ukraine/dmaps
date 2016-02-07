@@ -653,10 +653,10 @@ function location_province_name($country = 'us', $province = 'xx') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager::locationProvinceCode()
  * Get a province code from a code or full name and a country.
  */
 function location_province_code($country = 'us', $province = 'xx') {
-  // @todo MVP port location_province_code for https://github.com/drupal-ukraine/dmaps/pull/40
   // An array of countries is useful if someone specified multiple countries
   // in an autoselect for example.
   // It *is* possibly ambiguous, especially if the province was already a code.
