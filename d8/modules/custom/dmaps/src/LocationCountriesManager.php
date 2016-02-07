@@ -153,8 +153,43 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
     return '';
   }
 
-  public static function locationGetProvinces($country = 'us') {
+  /**
+   * Fetch the provinces for a country.
+   *
+   * @param string $country
+   *   Two-letter ISO code for country.
+   *
+   * @return array
+   */
+  public function locationGetProvinces($country = 'us') {
+    $provinces = &drupal_static(__FUNCTION__, []);
+    // Current language.
+    $language = \Drupal::service('language_manager')->getCurrentLanguage();
 
+    static::locationStandardizeCountryCode($country);
+    if (!isset($provinces[$country])) {
+      $cache_key = 'provinces:' . $country . ':' . $language->getId();
+      if ($cache = $this->cache->get($cache_key)) {
+        $provinces[$country] = $cache->data;
+      }
+      else {
+        static::locationLoadCountry($country);
+        // @todo: Revise this section with checking function on existing, after migrating to another format of managing supported countries, instead of number of functions in the files.
+        $provinces[$country] = [];
+        $func = 'location_province_list_' . $country;
+        if (function_exists($func)) {
+          $provinces[$country] = $func();
+          $this->cache->set($cache_key, $provinces[$country]);
+        }
+      }
+    }
+    $alter_hooks = [
+      'dmaps_location_provinces',
+      'dmaps_location_provinces_' . $country,
+    ];
+    \Drupal::moduleHandler()->alter($alter_hooks, $provinces, $country);
+
+    return isset($provinces[$country]) ? $provinces[$country] : [];
   }
 
   /**
@@ -167,8 +202,8 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
    *
    * @return string
    */
-  public static function locationProvinceName($country = 'us', $province = 'xx') {
-    $provinces = static::locationGetProvinces($country);
+  public function locationProvinceName($country = 'us', $province = 'xx') {
+    $provinces = $this->locationGetProvinces($country);
     $province = strtoupper($province);
     if (isset($provinces[$province])) {
       return $provinces[$province];
@@ -187,7 +222,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
    *
    * @return string
    */
-  public static function locationProvinceCode($country = 'us', $province = 'xx') {
+  public function locationProvinceCode($country = 'us', $province = 'xx') {
     // An array of countries is useful if someone specified multiple countries
     // in an autoselect for example.
     // It *is* possibly ambiguous, especially if the province was already a code.
@@ -201,7 +236,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
 
         return $province;
       }
-      $provinces = static::locationGetProvinces($c);
+      $provinces = $this->locationGetProvinces($c);
       foreach ($provinces as $k => $v) {
         if ($p == strtoupper($k) || $p == strtoupper($v)) {
 
