@@ -585,10 +585,10 @@ function _location_supported_countries() {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager->locationGetProvinces()
  * Fetch the provinces for a country.
  */
 function location_get_provinces($country = 'us') {
-  // @todo MVP port location_get_provinces for https://github.com/drupal-ukraine/dmaps/pull/40
   $provinces = & drupal_static(__FUNCTION__, array());
   // Current language.
   $lang_code = $GLOBALS['language']->language;
@@ -637,10 +637,10 @@ function location_country_name($country = 'us') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager->locationProvinceName()
  * Get the full name of a province code.
  */
 function location_province_name($country = 'us', $province = 'xx') {
-  // @todo MVP port location_province_name for https://github.com/drupal-ukraine/dmaps/pull/40
   $provinces = location_get_provinces($country);
   $province = strtoupper($province);
   if (isset($provinces[$province])) {
@@ -653,10 +653,10 @@ function location_province_name($country = 'us', $province = 'xx') {
 
 // @@@ New in 3.x, document.
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\LocationCountriesManager->locationProvinceCode()
  * Get a province code from a code or full name and a country.
  */
 function location_province_code($country = 'us', $province = 'xx') {
-  // @todo MVP port location_province_code for https://github.com/drupal-ukraine/dmaps/pull/40
   // An array of countries is useful if someone specified multiple countries
   // in an autoselect for example.
   // It *is* possibly ambiguous, especially if the province was already a code.
