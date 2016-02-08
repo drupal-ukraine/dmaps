@@ -6,11 +6,10 @@
  */
 
 /**
- * Implements hook_uninstall().
+ * Implements hook_install().
  */
-function dmaps_uninstall() {
-  // Remove cache table.
-  \Drupal::cache('dmaps')->removeBin();
+function dmaps_install() {
+
 }
 
 /**
@@ -229,4 +228,13 @@ function dmaps_schema() {
   ];
 
   return $schema;
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function dmaps_uninstall() {
+  // Remove cache table.
+  \Drupal::cache('dmaps')->removeBin();
 }
