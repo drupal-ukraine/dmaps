@@ -129,10 +129,10 @@ function google_geocode_settings($country, &$config) {
     '#size' => 64,
     '#maxlength' => 128,
     '#default_value' => $config->get('location_geocode_google_apikey'),
-    '#description' => t('In order to use the Google Geocoding API web-service, you will need a Google Geocoding API Server Key.  You can obtain one at the !sign_up_link for the !google_maps_api.  Without a key daily requests from a single IP address will be automaticaly limited.  If you do not enter a key here this module will use the Google Maps API Key from gmap if one is present. NOTE: You will <em>not</em> have to re-enter your API key for each country for which you have selected Google Maps for geocoding.  This setting is global.',
+    '#description' => t('In order to use the Google Geocoding API web-service, you will need a Google Geocoding API Server Key.  You can obtain one at the :sign_up_link for the :google_maps_api.  Without a key daily requests from a single IP address will be automaticaly limited.  If you do not enter a key here this module will use the Google Maps API Key from gmap if one is present. NOTE: You will <em>not</em> have to re-enter your API key for each country for which you have selected Google Maps for geocoding.  This setting is global.',
       [
-        '!sign_up_link' => '<a href="http://console.developers.google.com/">sign-up page</a>',
-        '!google_maps_api' => '<a href="http://developers.google.com/maps/documentation/geocoding/">Google Geocoding API</a>',
+        ':sign_up_link' => '<a href="http://console.developers.google.com/">sign-up page</a>',
+        ':google_maps_api' => '<a href="http://developers.google.com/maps/documentation/geocoding/">Google Geocoding API</a>',
       ]
     ),
   ];

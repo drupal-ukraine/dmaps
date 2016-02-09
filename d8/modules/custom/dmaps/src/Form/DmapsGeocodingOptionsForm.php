@@ -162,6 +162,7 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
 
       $country_geocode_key = 'geocode_' . $country_iso;
       $current_value = $config->get($country_iso);
+      $current_value = isset($current_value['geocoder']) ? $current_value['geocoder'] : 'none';
 
       if (count($geocoding_options)) {
         $geocoding_options = array_merge(['none' => $this->t('None')], $geocoding_options);
@@ -235,7 +236,8 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
       $key = key($country);
       $value = $country[$key];
       $geocoders_in_use[$value] = $value;
-      $config->set($iso, $value);
+//      $config->set($iso, $value);
+      $config->set($iso, array('country' => $iso, 'geocoder' => $value));
     }
     $config->save();
 
