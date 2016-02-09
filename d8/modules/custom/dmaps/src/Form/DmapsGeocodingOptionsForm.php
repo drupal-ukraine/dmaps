@@ -138,9 +138,11 @@ class DmapsGeocodingOptionsForm extends ConfigFormBase {
           $url = Url::fromUri($details['url']);
           $geocoder_link = Link::fromTextAndUrl($details['name'], $url)
             ->toRenderable();
+          $geocoder_link = \Drupal::service('renderer')->render($geocoder_link);
           $url = Url::fromUri($details['tos']);
           $terms_link = Link::fromTextAndUrl($this->t('Terms of Use'), $url)
             ->toRenderable();
+          $terms_link = \Drupal::service('renderer')->render($terms_link);
           $geocoding_options[$name . '|' . $country_iso] = $geocoder_link . ' ' . $terms_link;
         }
       }
