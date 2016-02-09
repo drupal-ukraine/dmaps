@@ -4,3 +4,237 @@
  * @file
  * Install, update and uninstall functions for the Maps for Drupal module.
  */
+
+/**
+ * Implements hook_install().
+ */
+function dmaps_install() {
+
+}
+
+/**
+ * Implements hook_schema().
+ */
+function dmaps_schema() {
+  $schema = [];
+  $schema['dmaps_location'] = [
+    'description' => 'Locational data managed by dmaps module.',
+    'fields' => [
+      'lid' => [
+        'description' => 'Primary Key: Unique location ID.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'description' => 'Place Name.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'street' => [
+        'description' => 'Street address, line 1.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'additional' => [
+        'description' => 'Street address, line 2.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'city' => [
+        'description' => 'City.',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'province' => [
+        'description' => 'State / Province code.',
+        'type' => 'varchar',
+        'length' => 16,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'postal_code' => [
+        'description' => 'Postal / ZIP code.',
+        'type' => 'varchar',
+        'length' => 16,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+      'country' => [
+        'description' => 'Two letter ISO country code.',
+        'type' => 'char',
+        'length' => 2,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'latitude' => [
+        'description' => 'Location latitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'longitude' => [
+        'description' => 'Location longitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'source' => [
+        'description' => 'Source of the latitude and longitude data (Geocoder, user entered, invalid, etc.)',
+        'type' => 'int',
+        'size' => 'tiny',
+        'default' => 0,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['lid'],
+  ];
+
+  $schema['dmaps_location_instance'] = [
+    'description' => 'N:M join table to join locations to other tables.',
+    'fields' => [
+      'nid' => [
+        'description' => 'Reference to {node}.nid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'vid' => [
+        'description' => 'Reference to {node_revision}.vid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'uid' => [
+        'description' => 'Reference to {users}.uid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'genid' => [
+        'description' => 'Generic reference key.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'lid' => [
+        'description' => 'Reference to {location}.lid.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'indexes' => [
+      'nid' => ['nid'],
+      'vid' => ['vid'],
+      'uid' => ['uid'],
+      'genid' => ['genid'],
+      'lid' => ['lid'],
+    ],
+  ];
+
+  $schema['dmaps_location_country'] = [
+    'description' => 'Country data managed by the Dmaps module.',
+    'fields' => [
+      'code' => [
+        'description' => 'Primary Key: Two letter ISO Country Code',
+        'type' => 'char',
+        'length' => 2,
+        'not null' => TRUE,
+      ],
+      'name' => [
+        'description' => 'Full Country Name ',
+        'type' => 'varchar',
+        'length' => 255,
+        'default' => '',
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['code'],
+  ];
+
+  $schema['dmaps_location_zipcodes'] = [
+    'description' => 'Table for storing location zipcodes for the Dmaps module.',
+    'fields' => [
+      'zip' => [
+        'description' => 'Postal / ZIP code.',
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => '0',
+      ],
+      'city' => [
+        'description' => 'City.',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'state' => [
+        'description' => 'Province / State.',
+        'type' => 'varchar',
+        'length' => 30,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+      'latitude' => [
+        'description' => 'Location latitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'longitude' => [
+        'description' => 'Location longitude (decimal degrees).',
+        'type' => 'numeric',
+        'precision' => 10,
+        'scale' => 6,
+        'not null' => TRUE,
+        'default' => 0.0,
+      ],
+      'country' => [
+        'description' => 'Two letter ISO country code.',
+        'type' => 'char',
+        'length' => 2,
+        'not null' => TRUE,
+        'default' => '',
+      ],
+    ],
+    'primary key' => ['zip', 'country'],
+    'indexes' => [
+      'zip' => ['zip'],
+      'latitude' => ['latitude'],
+      'longitude' => ['longitude'],
+      'country' => ['country'],
+    ],
+  ];
+
+  return $schema;
+}
+
+
+/**
+ * Implements hook_uninstall().
+ */
+function dmaps_uninstall() {
+  // Remove cache table.
+  \Drupal::cache('dmaps')->removeBin();
+}

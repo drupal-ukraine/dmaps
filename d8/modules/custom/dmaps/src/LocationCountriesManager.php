@@ -101,6 +101,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
   public static function locationLoadCountry($country) {
     static::locationStandardizeCountryCode($country);
 
+    // @todo 8.x-2.x - convert to country plugins. Or even configs.
     $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/files/supported_countries/location.' . $country . '.inc';
     if (file_exists($file)) {
       include_once $file;
@@ -112,12 +113,13 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
   }
 
   /**
-   * Canonicalize a country code.
+   * Make country code canonical.
    *
    * @param string $country
-   *   Two-letter ISO code for country.
+   *   Country code.
    *
    * @return bool
+   *   False if wrong, TRUE if ok.
    */
   public static function locationStandardizeCountryCode(&$country) {
     $country = trim($country);
@@ -127,11 +129,9 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
 
       return FALSE;
     }
-    else {
-      $country = strtolower($country);
+    $country = strtolower($country);
 
-      return TRUE;
-    }
+    return TRUE;
   }
 
   /**
@@ -142,7 +142,7 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
    *
    * @return string
    */
-  public function locationCountryName($country = 'us') {
+  public static function locationCountryName($country = 'us') {
     static::locationStandardizeCountryCode($country);
     $countries = static::getIso3166List();
     if (isset($countries[$country])) {
@@ -154,27 +154,98 @@ class LocationCountriesManager implements LocationCountriesManagerInterface {
   }
 
   /**
-   * Load support for a country.
-   *
-   * This function will load support for a country identified by its two-letter ISO code.
+   * Fetch the provinces for a country.
    *
    * @param string $country
    *   Two-letter ISO code for country.
    *
-   * @return bool
-   *   TRUE if the file was found and loaded, FALSE otherwise.
+   * @return array
    */
-  public function getCountry($country) {
+  public function locationGetProvinces($country = 'us') {
+    $provinces = &drupal_static(__FUNCTION__, []);
+    // Current language.
+    $language = \Drupal::service('language_manager')->getCurrentLanguage();
+
     static::locationStandardizeCountryCode($country);
+    if (!isset($provinces[$country])) {
+      $cache_key = 'provinces:' . $country . ':' . $language->getId();
+      if ($cache = $this->cache->get($cache_key)) {
+        $provinces[$country] = $cache->data;
+      }
+      else {
+        static::locationLoadCountry($country);
+        // @todo: Revise this section with checking function on existing, after migrating to another format of managing supported countries, instead of number of functions in the files.
+        $provinces[$country] = [];
+        $func = 'location_province_list_' . $country;
+        if (function_exists($func)) {
+          $provinces[$country] = $func();
+          $this->cache->set($cache_key, $provinces[$country]);
+        }
+      }
+    }
+    $alter_hooks = [
+      'dmaps_location_provinces',
+      'dmaps_location_provinces_' . $country,
+    ];
+    \Drupal::moduleHandler()->alter($alter_hooks, $provinces[$country], $country);
 
-    // @todo 8.x-2.x - convert to country plugins. Or even configs.
-    $file = DRUPAL_ROOT . '/' . drupal_get_path('module', 'dmaps') . '/files/supported_countries/location.' . $country . '.inc';
-    if (file_exists($file)) {
-      include_once $file;
+    return isset($provinces[$country]) ? $provinces[$country] : [];
+  }
 
-      return TRUE;
+  /**
+   * Get the full name of a province code.
+   *
+   * @param string $country
+   *   Two-letter ISO code for country.
+   * @param string $province
+   *   Province two-letter code.
+   *
+   * @return string
+   */
+  public function locationProvinceName($country = 'us', $province = 'xx') {
+    $provinces = $this->locationGetProvinces($country);
+    $province = strtoupper($province);
+    if (isset($provinces[$province])) {
+      return $provinces[$province];
     }
 
-    return FALSE;
+    return '';
   }
+
+  /**
+   * Get a province code from a code or full name and a country.
+   *
+   * @param string $country
+   *   Two-letter ISO code for country.
+   * @param string $province
+   *   Province two-letter code.
+   *
+   * @return string
+   */
+  public function locationProvinceCode($country = 'us', $province = 'xx') {
+    // An array of countries is useful if someone specified multiple countries
+    // in an autoselect for example.
+    // It *is* possibly ambiguous, especially if the province was already a code.
+    // We make an array here for single (the usual case) for code simplicity reasons.
+    if (!is_array($country)) {
+      $country = [$country];
+    }
+    $p = strtoupper($province);
+    foreach ($country as $c) {
+      if ($c == 'xx') {
+
+        return $province;
+      }
+      $provinces = $this->locationGetProvinces($c);
+      foreach ($provinces as $k => $v) {
+        if ($p == strtoupper($k) || $p == strtoupper($v)) {
+
+          return $k;
+        }
+      }
+    }
+
+    return '';
+  }
+
 }
