@@ -6,6 +6,8 @@
  */
 
 /**
+ * PORTED to Dmaps 8.x-1.x - dmaps_token_info();
+ *
  * Implements hook_token_info().
  */
 function location_token_info() {
