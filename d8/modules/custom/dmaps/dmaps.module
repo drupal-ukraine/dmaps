@@ -57,3 +57,10 @@ function dmaps_entity_extra_field_info() {
 
   return $extra;
 }
+
+/**
+ * Implements hook_cache_flush().
+ */
+function dmaps_cache_flush() {
+  \Drupal::service('cache.dmaps')->invalidateAll();
+}
