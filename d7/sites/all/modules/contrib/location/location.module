@@ -1950,6 +1950,8 @@ function theme_location_longitude_dms($variables) {
 }
 
 /**
+ * // PORTED: Removed in 8.x
+ *
  * Implements hook_token_values().
  */
 function location_token_values($type, $object = NULL) {
@@ -1959,6 +1961,8 @@ function location_token_values($type, $object = NULL) {
 }
 
 /**
+ * // PORTED: Removed in 8.x
+ *
  * Implements hook_token_list().
  */
 function location_token_list($type = 'all') {
