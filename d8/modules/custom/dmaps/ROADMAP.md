@@ -27,6 +27,8 @@ include location_distance_between()
 - [x] service for getting supported locations, now they are located in the folder /supported as separate files for each location.
 LocationCountriesManager()
 
+- [x] tokens service
+
 - [ ] Province service
 location_get_provinces()
 location_province_name()
