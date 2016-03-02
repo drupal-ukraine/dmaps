@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * @file
  * Contains \Drupal\dmaps\Form\DmapsGeocoderOptionsForm
  */
 

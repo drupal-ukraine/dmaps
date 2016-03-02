@@ -76,7 +76,7 @@ class EarthGeographicalDistances {
    * @return array
    *   Array of coordinates.
    */
-  protected function getXYZ($longitude, $latitude, $altitude = 0) {
+  public function getXYZ($longitude, $latitude, $altitude = 0) {
     $long = deg2rad($longitude);
     $lat = deg2rad($latitude);
 

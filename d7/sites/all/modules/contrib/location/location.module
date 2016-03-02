@@ -22,6 +22,8 @@ define('LOCATION_USER_COLLECT', 1);
 include_once DRUPAL_ROOT . '/' . LOCATION_PATH . '/location.inc';
 
 /**
+ * partially PORTED to Dmaps 8.x-1.x: dmaps.routing.yml
+ *
  * Implements hook_menu().
  */
 function location_menu() {
@@ -37,6 +39,7 @@ function location_menu() {
     'page callback' => '_location_city_autocomplete',
     'type' => MENU_CALLBACK,
   );
+  // PORTED to Dmaps 8.x-1.x - route 'dmaps.settings'
   $items['admin/config/content/location'] = array(
     'title' => 'Location',
     'description' => 'Settings for Location module',
@@ -58,6 +61,7 @@ function location_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 1,
   );
+  // PORTED to Dmaps 8.x-1.x - route 'dmaps.locations.geocoding_options'
   $items['admin/config/content/location/geocoding'] = array(
     'title' => 'Geocoding options',
     'page callback' => 'drupal_get_form',
@@ -67,12 +71,14 @@ function location_menu() {
     'type' => MENU_LOCAL_TASK,
     'weight' => 2,
   );
+  // PORTED to Dmaps 8.x-1.x - route 'dmaps.locations.geocoder_options'
   $items['admin/config/content/location/geocoding/%/%'] = array(
     'page callback' => 'location_geocoding_parameters_page',
     'page arguments' => array(5, 6),
     'access arguments' => array('administer site configuration'),
     'type' => MENU_CALLBACK,
   );
+  // PORTED to Dmaps 8.x-1.x - route 'dmaps.location.util'
   $items['admin/config/content/location/util'] = array(
     'title' => 'Location utilities',
     'page callback' => 'drupal_get_form',
@@ -94,6 +100,8 @@ function location_api_variant() {
 }
 
 /**
+ * PORTED to Dmaps 8.x-1.x: dmaps.permissions.yml
+ *
  * Implements hook_permission().
  */
 function location_permission() {
@@ -114,6 +122,8 @@ function location_permission() {
 }
 
 /**
+ * PORTED to Dmaps 8.x-1.x
+ *
  * Implements hook_help().
  *
  * @TODO: check/fix this: admin/content/configure/types (still use %? still same url?)
@@ -242,10 +252,14 @@ function location_theme() {
     'location_longitude_dms' => array(
       'variables' => array('longitude'),
     ),
+    // location_map_link_options theme not used in dmaps
+    // No need to port
     'location_map_link_options' => array(
       'render element' => 'form',
       'file' => 'location.admin.inc',
     ),
+    // location_geocoding_options theme not used in dmaps
+    // No need to port
     'location_geocoding_options' => array(
       'render element' => 'form',
       'file' => 'location.admin.inc',
@@ -1018,6 +1032,8 @@ function location_locationapi(&$obj, $op, $a3 = NULL, $a4 = NULL, $a5 = NULL) {
 }
 
 /**
+ * PORTED to 8.x-1.x - \Drupal\dmaps\Form\DmapsGeocoderOptionsForm
+ *
  * Page callback.
  */
 function location_geocoding_parameters_page($country_iso, $service) {

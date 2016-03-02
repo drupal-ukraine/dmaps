@@ -8,7 +8,9 @@
 require_once drupal_get_path('module', 'location') . '/earth.inc';
 require_once drupal_get_path('module', 'location') . '/tests/location_testcase.test';
 
-
+/**
+ * PORTED to Dmaps 8.x-1.x: EarthGeographicalDistanceServiceTest class
+ */
 class LocationEarthTest extends LocationTestCase {
   public static function getInfo() {
     return array(
